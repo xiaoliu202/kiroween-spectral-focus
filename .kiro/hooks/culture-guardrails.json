@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Culture guardrails review",
+      "description": "When cultural content changes, reminds the agent to re-check sourcing and framing before continuing.",
+      "trigger": "PostFileSave",
+      "matcher": "(^|[\\\\/])(lore\\.js|CULTURE\\.md)$",
+      "action": {
+        "type": "agent",
+        "prompt": "Cultural content was just edited. Before continuing, re-check the changed text: every card keeps an institution/title/URL source; folklore is labelled as folklore, not history; the Samhain 'Celtic new year' claim stays described as disputed; Halloween is not conflated with Dia de Muertos; candy, prices and unlock thresholds are described as original game mechanics. Report any problem instead of silently rewriting the source text."
+      }
+    }
+  ]
+}

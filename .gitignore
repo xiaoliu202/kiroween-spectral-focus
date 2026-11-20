@@ -1,0 +1,8 @@
+node_modules/
+playwright-report/
+test-results/
+_site/
+*.log
+# Written only when a browser test fails.
+evidence/failure.png
+# .kiro/ and verification evidence intentionally remain publishable.

@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-11-17T13:59:47.137489+00:00",
+  "method": "GET from this environment, not a guarantee of future availability",
+  "sources": [
+    {
+      "url": "https://blogs.loc.gov/folklife/2013/10/welcome-to-folklife-today/",
+      "status": 200,
+      "resolvedUrl": "https://blogs.loc.gov/folklife/2013/10/welcome-to-folklife-today/",
+      "bytes": 129290
+    },
+    {
+      "url": "https://blogs.loc.gov/folklife/2022/10/spooky-stories-for-halloween-2022-on-the-folklife-today-podcast/",
+      "status": 200,
+      "resolvedUrl": "https://blogs.loc.gov/folklife/2022/10/spooky-stories-for-halloween-2022-on-the-folklife-today-podcast/",
+      "bytes": 120661
+    },
+    {
+      "url": "https://blogs.loc.gov/folklife/2024/10/scary-stories-for-halloween-2024-on-the-folklife-today-podcast/",
+      "status": 200,
+      "resolvedUrl": "https://blogs.loc.gov/folklife/2024/10/scary-stories-for-halloween-2024-on-the-folklife-today-podcast/",
+      "bytes": 117905
+    },
+    {
+      "url": "https://blogs.loc.gov/folklife/2017/10/loc-halloween-enter-the-chambers-of-mystery/",
+      "status": 200,
+      "resolvedUrl": "https://blogs.loc.gov/folklife/2017/10/loc-halloween-enter-the-chambers-of-mystery/",
+      "bytes": 116004
+    },
+    {
+      "url": "https://www.history.com/articles/history-of-halloween",
+      "status": 200,
+      "resolvedUrl": "https://www.history.com/articles/history-of-halloween",
+      "bytes": 736611
+    }
+  ]
+}

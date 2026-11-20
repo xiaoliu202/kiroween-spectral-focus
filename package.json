@@ -1,0 +1,24 @@
+{
+  "name": "spectral-focus-halloween-town",
+  "version": "2.0.0",
+  "private": true,
+  "description": "A private, culture-inspired Halloween town for tasks and candlelit focus.",
+  "license": "MIT",
+  "scripts": {
+    "start": "node scripts/serve.cjs",
+    "check": "node scripts/check.cjs",
+    "test": "node --test tests/model.test.cjs tests/model.property.test.cjs",
+    "test:pbt": "node --test tests/model.property.test.cjs",
+    "test:browser": "node tests/browser.cjs",
+    "verify": "npm run check && npm test && npm run test:browser",
+    "verify:report": "node scripts/verify-report.cjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "fast-check": "^4.10.3",
+    "playwright": "^1.65.1"
+  }
+}

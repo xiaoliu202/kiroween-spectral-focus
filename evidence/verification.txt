@@ -1,0 +1,109 @@
+Spectral Focus verification
+Date: 2026-11-20T03:20:53.709Z
+Node: v24.16.0
+Platform: win32
+
+== Syntax, HTML ids and asset references (exit 0) ==
+Syntax passed for 10 JavaScript files; HTML ids and asset references passed.
+
+== Model example and property-based tests (exit 0) ==
+✔ PBT R1.1-R1.3: rewards, purchases and unlocks hold for any operation sequence (35.3465ms)
+✔ PBT R1.4: timer operations never duplicate sessions, leave range, or complete tasks (16.3192ms)
+✔ PBT R1.5: save then load returns the same state without a warning (15.8967ms)
+✔ PBT R1.6: any stored v2 content loads safely, validly and without writing (75.4179ms)
+✔ PBT R1.7: v1 migration keeps legacy bytes, mints no candy and ledgers old completions (34.254ms)
+✔ PBT R1.8: statistics count each valid focus session once (7.4117ms)
+✔ exports the exact constants and complete synchronous API through CommonJS (3.0463ms)
+✔ newState has the exact defaults and no shared mutable collections (0.4101ms)
+✔ browser UMD exposes globalThis.SpectralModel without DOM, require or browser APIs (2.566ms)
+✔ fallback IDs remain unique with a fixed clock/random source and no crypto (3.5573ms)
+✔ unavailable crypto and collisions with deleted task ledgers use the safe fallback (2.8152ms)
+✔ empty storage yields clean defaults without writing (0.5741ms)
+✔ valid v2 takes precedence over v1 and preserves all current fields (4.619ms)
+✔ v2 property order alone is not treated as corruption (0.3976ms)
+✔ migration preserves original v1 bytes, valid running deadline, tasks and duration (0.824ms)
+✔ legacy paused timer preserves remaining seconds and resumes without counting paused time (0.5203ms)
+✔ expired migrated running timer settles only on tick, at its original deadline (0.4342ms)
+✔ an initially completed legacy timer does not count unless started again (0.3368ms)
+✔ migration deduplicates IDs safely including Object prototype names (0.451ms)
+✔ storage access failures return valid state and a warning rather than throwing (0.6847ms)
+✔ guarded migration still returns restored data when quota blocks the v2 write (0.3034ms)
+✔ save guards write and serialization failures without touching the legacy key (0.4629ms)
+✔ corrupted v2 is preserved byte-for-byte and never falls back to or overwrites v1 (0.5209ms)
+✔ invalid legacy JSON or non-object data returns a warning and preserves the original (0.2596ms)
+✔ malformed current data is repaired with bounded fields, unique IDs and a safe wallet (1.0753ms)
+✔ all malformed root containers recover and numeric overflow cannot create infinite timers (0.3894ms)
+✔ JSON __proto__ fields never modify prototypes during recovery (0.1962ms)
+✔ addTask mutates state, trims the title and returns its exact task object (0.3393ms)
+✔ invalid task input throws before mutation for both addition and editing (1.4798ms)
+✔ editTask updates values in place while preserving identity, completion and createdAt (0.2415ms)
+✔ unknown task IDs and invalid done values throw without mutation (0.864ms)
+✔ task rewards cannot be farmed by repeated completion, reopening, refreshing or deletion (0.3661ms)
+✔ deleting the selected task nulls its timer link without stopping or restarting the timer (1.0736ms)
+✔ wallet purchases deduct exactly once, never become negative and persist selection (0.5128ms)
+✔ insufficient, unknown and unowned skin operations return false without spending (0.2236ms)
+✔ validated settings boundary values survive refresh (0.3218ms)
+✔ setTimer selects supported modes/durations and resets in place with no credits (0.3243ms)
+✔ invalid timer selections throw atomically (0.4294ms)
+✔ tick uses the absolute deadline and ceiling, completes once and never completes the task (0.2936ms)
+✔ paused and initially complete timers do not award focus sessions (0.2884ms)
+✔ pause settles elapsed time and resume preserves ID while excluding paused time (0.1811ms)
+✔ pause after the deadline settles the actual completed session exactly once (0.1462ms)
+✔ reset preserves mode, duration and task, clears session identity and awards nothing (0.2768ms)
+✔ break completion never enters focus statistics or completes its linked task (0.246ms)
+✔ Start on an existing run preserves the deadline; late Start settles without restarting (0.1805ms)
+✔ running, paused and ended v2 timers restore across refresh without double-counting (0.4682ms)
+✔ stale persisted end for an already credited session cannot award a duplicate (0.2308ms)
+✔ fresh focus sessions receive different IDs and each earns one completion (0.1957ms)
+✔ progress deduplicates rewarded and completed IDs, including prototype strings (0.1498ms)
+✔ all six lore thresholds unlock at their exact task/session boundaries (0.9277ms)
+✔ lore progress survives completed-task deletion and actual focus sessions (0.4601ms)
+✔ stats returns seven chronological local dates, zero days, daily counts and lifetime minutes (0.5513ms)
+✔ delayed tick across midnight attributes focus to the deadline date rather than the observation date (0.2119ms)
+✔ a focus crossing midnight belongs to the date it completes (0.1979ms)
+✔ localDate uses local calendar fields, pads month/day and handles month/year boundaries (0.185ms)
+✔ DST spring-forward and fall-back retain seven distinct consecutive local dates (98.2222ms)
+✔ local date and daily stats honor time zones ahead of UTC (91.8173ms)
+✔ invalid operation timestamps throw instead of producing NaN timer/statistics values (0.7787ms)
+✔ regression (found by PBT): a deadline further away than one session is clamped on load and tick (0.2868ms)
+ℹ tests 59
+ℹ suites 0
+ℹ pass 59
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 401.4973
+
+== Real-browser checks (exit 0) ==
+RUN  Four populated views, named scene destinations, no remote runtime requests
+PASS Four populated views, named scene destinations, no remote runtime requests
+RUN  Task editor, whitespace validation, editing, notes, priority and safe literal text
+PASS Task editor, whitespace validation, editing, notes, priority and safe literal text
+RUN  Associated 25-minute candle, pause/resume, navigation, refresh and exactly one completion
+PASS Associated 25-minute candle, pause/resume, navigation, refresh and exactly one completion
+RUN  Task completion fades ghost; reopen/recomplete cannot farm candy; filters work
+PASS Task completion fades ghost; reopen/recomplete cannot farm candy; filters work
+RUN  Buy/equip turnip, reject unaffordable skins, open earned stories and retain on refresh
+PASS Buy/equip turnip, reject unaffordable skins, open earned stories and retain on refresh
+RUN  Duration/reset confirmations cancel safely; 15-minute focus and five-minute rest have distinct statistics
+PASS Duration/reset confirmations cancel safely; 15-minute focus and five-minute rest have distinct statistics
+RUN  All six culture milestones, full source metadata, virtual-candy disclaimer and second skin purchase
+PASS All six culture milestones, full source metadata, virtual-candy disclaimer and second skin purchase
+RUN  Delete/clear preserve earned progress, current links and seven local-day statistics
+PASS Delete/clear preserve earned progress, current links and seven local-day statistics
+RUN  Synthesized wind requires a click, supports volume/off, and reloads silently
+PASS Synthesized wind requires a click, supports volume/off, and reloads silently
+RUN  Keyboard dialog focus containment, Escape restoration, custom and system reduced motion
+PASS Keyboard dialog focus containment, Escape restoration, custom and system reduced motion
+RUN  Axe WCAG A/AA checks across all views and three keyboard-safe dialogs
+PASS Axe WCAG A/AA checks across all views and three keyboard-safe dialogs
+RUN  375 / 768 / 1280 layouts, long text and real rendered screenshots
+PASS 375 / 768 / 1280 layouts, long text and real rendered screenshots
+RUN  Non-destructive v1 running migration, completion/reload deduplication and paid legacy-task protection
+PASS Non-destructive v1 running migration, completion/reload deduplication and paid legacy-task protection
+RUN  Corrupted and blocked storage stay usable, warn clearly and preserve original data
+PASS Corrupted and blocked storage stay usable, warn clearly and preserve original data
+Browser checks passed: 14. Screenshots: 10. No console/runtime errors.
+
+Result: PASSED

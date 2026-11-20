@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Fast checks before the agent stops",
+      "description": "Runs syntax/id checks and model tests when an agent turn ends, so a broken model is caught before handing back.",
+      "trigger": "Stop",
+      "action": {
+        "type": "command",
+        "command": "npm run check --silent && npm test --silent",
+        "timeout": 180
+      }
+    }
+  ]
+}

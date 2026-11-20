@@ -1,0 +1,78 @@
+{
+  "startedAt": "2026-11-20T03:20:55.791Z",
+  "engine": "Chrome via Playwright",
+  "clock": "Controlled clock; no full-length wall-clock endurance claim.",
+  "checks": [
+    {
+      "name": "Four populated views, named scene destinations, no remote runtime requests",
+      "status": "passed"
+    },
+    {
+      "name": "Task editor, whitespace validation, editing, notes, priority and safe literal text",
+      "status": "passed"
+    },
+    {
+      "name": "Associated 25-minute candle, pause/resume, navigation, refresh and exactly one completion",
+      "status": "passed"
+    },
+    {
+      "name": "Task completion fades ghost; reopen/recomplete cannot farm candy; filters work",
+      "status": "passed"
+    },
+    {
+      "name": "Buy/equip turnip, reject unaffordable skins, open earned stories and retain on refresh",
+      "status": "passed"
+    },
+    {
+      "name": "Duration/reset confirmations cancel safely; 15-minute focus and five-minute rest have distinct statistics",
+      "status": "passed"
+    },
+    {
+      "name": "All six culture milestones, full source metadata, virtual-candy disclaimer and second skin purchase",
+      "status": "passed"
+    },
+    {
+      "name": "Delete/clear preserve earned progress, current links and seven local-day statistics",
+      "status": "passed"
+    },
+    {
+      "name": "Synthesized wind requires a click, supports volume/off, and reloads silently",
+      "status": "passed"
+    },
+    {
+      "name": "Keyboard dialog focus containment, Escape restoration, custom and system reduced motion",
+      "status": "passed"
+    },
+    {
+      "name": "Axe WCAG A/AA checks across all views and three keyboard-safe dialogs",
+      "status": "passed"
+    },
+    {
+      "name": "375 / 768 / 1280 layouts, long text and real rendered screenshots",
+      "status": "passed"
+    },
+    {
+      "name": "Non-destructive v1 running migration, completion/reload deduplication and paid legacy-task protection",
+      "status": "passed"
+    },
+    {
+      "name": "Corrupted and blocked storage stay usable, warn clearly and preserve original data",
+      "status": "passed"
+    }
+  ],
+  "screenshots": [
+    "focus-complete-1280.png",
+    "town-375.png",
+    "tasks-375.png",
+    "focus-375.png",
+    "cabinet-375.png",
+    "town-1280.png",
+    "tasks-1280.png",
+    "focus-1280.png",
+    "cabinet-1280.png",
+    "focus-active-1280.png"
+  ],
+  "errors": [],
+  "finishedAt": "2026-11-20T03:21:18.274Z",
+  "status": "passed"
+}
