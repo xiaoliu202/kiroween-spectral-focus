@@ -17,14 +17,10 @@ Done in the repository:
 
 Owner steps (cannot be done locally):
 
-- [ ] Open **Agent Hooks** in Kiro, confirm the three hooks are listed, save `model.js` once to see the test hook run, and note the result in KIRO.md.
-- [ ] Create a **public GitHub** repository (not GitLab/Bitbucket) and push:
-  ```sh
-  git remote add origin https://github.com/<you>/spectral-focus.git
-  git push -u origin main
-  ```
-- [ ] Check that GitHub shows "MIT license" in the About box and that `.kiro/` is visible in the repo.
-- [ ] Settings → Pages → Source: **GitHub Actions**. Wait for the workflow, then open the Pages URL. This is the live app URL. No login is needed, so no judge credentials.
+- [ ] Open **Agent Hooks** in Kiro, confirm the three hooks are listed, save `model.js` once to see the test hook run, and note the result in KIRO.md. (Hook commands and matchers were checked by hand only; the panel was not observed.)
+- [x] Public GitHub repository: https://github.com/xiaoliu202/kiroween-spectral-focus
+- [x] GitHub detects the MIT license. Still check by eye that `.kiro/` is visible in the repo.
+- [x] Pages source is GitHub Actions. CI (verify + deploy) passed. Live app URL: https://xiaoliu202.github.io/kiroween-spectral-focus/ (no login needed, so no judge credentials).
 - [ ] Record the demo video (< 3:00) from DEMO-SCRIPT.md and upload it to YouTube publicly.
 - [ ] Fill in the Devpost form: repo URL, live URL, video URL, description, and how Kiro was used (below).
 - [ ] Disclose pre-existing work honestly. The base app was built with an external agent, then iterated in Kiro. Confirm that all of it was created during the submission period (on or after Oct 30, 2026).

@@ -2,6 +2,8 @@
 
 **A little focus. A little hocus-pocus.** A private Halloween-themed productivity web app: settle your tasks, keep a candle burning and discover the stories behind the glow.
 
+## Live demo
+https://xiaoliu202.github.io/kiroween-spectral-focus/
 ## Run
 
 No build step, account, backend, runtime dependencies or API keys are required.

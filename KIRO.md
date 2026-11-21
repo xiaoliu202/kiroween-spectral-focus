@@ -43,7 +43,7 @@ Files in `.kiro/hooks/`:
 - `culture-guardrails.json`: PostFileSave on `lore.js` or `CULTURE.md` injects an agent prompt that re-checks citations and framing.
 - `verify-before-stop.json`: on Stop, runs the syntax check and model tests before the agent hands back.
 
-The hook files were written by hand in the documented v1 JSON format, because the hook-creation tool was unavailable in this session. **Owner TODO:** open the Agent Hooks panel and confirm all three hooks are listed and fire. Record what you observe here before submitting.
+The hook files were written by hand in the documented v1 JSON format, because the hook-creation tool was unavailable in this session. **Verification status:** the three JSON files parse, their `matcher` regexes match the intended paths (for example `model.js`, `tests/model.property.test.cjs`, `lore.js`, `CULTURE.md`) with both slash styles, and their commands (`npm test`, `npm run check && npm test`) were run by hand and exit 0 in about one second. What has **not** been observed is Kiro itself listing the hooks in the Agent Hooks panel or firing one on a file save. Confirm that in the IDE and record the result here before relying on it in the video.
 
 ## Iterating with Kiro
 
