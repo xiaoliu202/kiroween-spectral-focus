@@ -42,7 +42,7 @@ Potential Impact, Technological Implementation (depth of Kiro use), Design, Inno
 - Four views: an illustrated Town, Hauntings (tasks), Candle Room (15/25/45-minute focus and 5-minute rest), Folklore Cabinet.
 - Honest rules: candy only on a task's first completion, only finished focus sessions count, and finishing focus never auto-completes a task.
 - Accessible: keyboard dialogs, axe-clean WCAG A/AA scans, app and system reduced-motion, and layouts from 375px to 1280px.
-- Robust: absolute deadlines that survive refresh, a non-destructive v1 → v2 migration, and damaged storage that is preserved, never overwritten.
+- Robust: absolute deadlines that survive refresh, a non-destructive v1 → v2 migration, damaged storage that is preserved, never overwritten, and a versioned JSON backup with a previewed, confirmed restore.
 
 ## How I used Kiro (paste into Devpost; details in KIRO.md)
 
@@ -52,4 +52,4 @@ I built the base app with another coding agent, then moved it into **Kiro IDE** 
 - **Property-based testing.** Kiro turned the eight invariants into fast-check properties that run random sequences over the real model API. Within seconds they found a bug that 52 example tests had missed. A stored deadline 1 ms more than a full session away showed 25:01 and made the candle taller than full, for example after the local clock moved backwards. The fix is `clampDeadline()`, and the shrunk counterexample is now a regression test. A second failure was a bug in my own property, and Kiro fixed the test rather than the model.
 - **Steering.** `product.md` holds the culture, privacy and accessibility rules, `tech.md` the static eight-file architecture and commands, and `testing.md` (fileMatch on `tests/**`) the testing lessons. With these in place, Kiro's new effects came out `aria-hidden` and static under reduced motion without extra prompting, and Kiro never added a framework or build step.
 - **Hooks.** One hook runs the model and property tests on every save of `model.js` or its tests. Another re-checks citations and framing when folklore text changes. A third runs fast checks when the agent stops.
-- **Verification.** Kiro ran the full suite (59 model tests, 14 real-Chrome groups with axe) after each change. It also noticed the old report leaked a local username and wrote a scrubbing report script.
+- **Verification.** Kiro ran the full suite (63 model tests including 6 properties, 15 real-Chrome groups with axe) after each change. It also noticed the old report leaked a local username and wrote a scrubbing report script.

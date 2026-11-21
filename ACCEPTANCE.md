@@ -1,6 +1,6 @@
 # Goal acceptance report · Spectral Focus Halloween Town
 
-**Result: all 12 in-scope criteria met.** Verified locally on November 17, 2026 against the exact host-created contract in `.pi/goal/spectral-focus-万圣夜小镇-文化驱动的前端与功能升级-20261117-2116.md`. No contract was replaced or renegotiated.
+**Result: all 12 in-scope criteria met.** Verified locally on November 17, 2026 against the goal contract used for the November 17 baseline (kept locally, not part of the repository). No contract was replaced or renegotiated.
 
 The final `npm run verify` passed: syntax/asset/id checks, **52 model tests**, **14 browser check groups**, and **9 actual rendered screenshots**. Browser console/runtime errors: **0**. Evidence is retained in [verification.txt](evidence/verification.txt), [browser-results.json](evidence/browser-results.json), and [the screenshot gallery](evidence/gallery.html).
 

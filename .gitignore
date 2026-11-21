@@ -6,3 +6,6 @@ _site/
 # Written only when a browser test fails.
 evidence/failure.png
 # .kiro/ and verification evidence intentionally remain publishable.
+# Local planning notes (Chinese, not part of the submission).
+.pi/
+IMPROVEMENT-PLAN.md

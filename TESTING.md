@@ -1,8 +1,18 @@
 # Verification · Halloween Town v2
 
+## Observed result — November 21, 2026 (local improvement phases 0–1)
+
+These changes were implemented with an external coding agent, not as a new Kiro iteration. The current local verification passed with **63 model tests** (57 examples and 6 fast-check properties), **15 real-Chrome browser groups**, no console/runtime errors, and syntax/HTML-id/asset checks. The browser JSON records the actual Chrome version. Current evidence is regenerated in `evidence/`; the section below retains the historical November 20 counts and attribution.
+
+- Timer reset and confirmed delete/clear now wait for the asynchronous operation's persisted result before checking UI/counts, without a fixed sleep. The reset correction passed twice on the 59-test/14-group baseline; the final 63-test/15-group verification also passed twice consecutively after the delete/clear correction.
+- Four new model tests cover versioned backup round-trips, timer snapshots without mutating live timers or awarding offline time, malformed/unknown-version/oversized files, duplicate IDs/field limits, and reward/session ledger preservation.
+- The additional browser group exercises an actual backup download, the file chooser, version/count preview, forward/reverse keyboard focus containment, cancel/focus restoration, confirmed full replacement, reload persistence, imported settings, no second reward, invalid JSON/oversized rejection, and storage-quota failure preserving both stored and live tasks. After a failed restore, ordinary task edits remain saveable when storage becomes available again.
+- The backup preview is also scanned with axe under the existing WCAG 2/2.1 A/AA tags. These checks do not claim WCAG 2.2 conformance, cross-browser support or a human screen-reader audit.
+- Only complete, versioned backups up to 1,000,000 bytes are accepted. Restoration is full replacement after confirmation; no merge, remote transfer or automatic upload is added. Timers are saved/restored paused and do not count elapsed time while a file is away.
+
 ## Observed result — November 20, 2026 (Kiro iteration)
 
-`npm run verify:report` passed in Kiro IDE. The full output, with local paths removed, is in [evidence/verification.txt](evidence/verification.txt).
+`npm run verify:report` passed in Kiro IDE on this date. The evidence files now hold the latest local verification; this section records the historical Kiro iteration results.
 
 - Syntax checks for ten JavaScript files, unique HTML IDs and production asset references: **passed**.
 - Node model tests: **59 passed, 0 failed** = 53 example tests (including one PBT regression) + 6 fast-check properties (250 runs each by default; also passed with `SPECTRAL_PBT_RUNS=3000`).

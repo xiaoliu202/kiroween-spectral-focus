@@ -26,6 +26,9 @@
   const isRecord = value => value !== null && typeof value === 'object' && !Array.isArray(value);
   const isId = value => typeof value === 'string' && value.trim().length > 0;
   const isTimestamp = value => Number.isFinite(value) && Math.abs(value) <= 8640000000000000;
+  const BACKUP_FORMAT = 'spectral-focus-backup';
+  const BACKUP_VERSION = 1;
+  const MAX_BACKUP_BYTES = 1_000_000;
   let counter = 0;
 
   function timestamp(value) {
@@ -188,6 +191,61 @@
     return { state, warning, migrated: legacy };
   }
 
+  function createBackup(state, exportedAt = Date.now()) {
+    timestamp(exportedAt);
+    if (!isRecord(state) || state.version !== 2) throw new Error('Only a valid v2 state can be backed up.');
+    const snapshot = JSON.parse(JSON.stringify(state));
+    const normalized = normalize(snapshot, exportedAt, false);
+    if (!sameData(snapshot, normalized)) throw new Error('The current state is not valid for backup.');
+    if (snapshot.timer.end !== null) {
+      clampDeadline(snapshot.timer, exportedAt);
+      snapshot.timer.remaining = Math.max(0, Math.ceil((snapshot.timer.end - exportedAt) / 1000));
+      snapshot.timer.end = null;
+    }
+    return { format: BACKUP_FORMAT, formatVersion: BACKUP_VERSION, exportedAt, data: snapshot };
+  }
+
+  function parseBackup(json, now = Date.now()) {
+    if (!isTimestamp(now)) now = Date.now();
+    if (typeof json !== 'string') return { state: null, error: 'Choose a JSON backup file.' };
+    if (json.length > MAX_BACKUP_BYTES) return { state: null, error: 'The backup file is too large.' };
+    let bytes;
+    try { bytes = typeof TextEncoder !== 'undefined' ? new TextEncoder().encode(json).byteLength : json.length * 2; }
+    catch (_) { return { state: null, error: 'The backup file could not be read.' }; }
+    if (bytes > MAX_BACKUP_BYTES) return { state: null, error: 'The backup file is too large.' };
+    let envelope;
+    try { envelope = JSON.parse(json); }
+    catch (_) { return { state: null, error: 'This file is not valid JSON.' }; }
+    if (!isRecord(envelope) || envelope.format !== BACKUP_FORMAT || envelope.formatVersion !== BACKUP_VERSION) {
+      return { state: null, error: 'This is not a supported Spectral Focus backup.' };
+    }
+    if (!isTimestamp(envelope.exportedAt) || !isRecord(envelope.data) || envelope.data.version !== 2) {
+      return { state: null, error: 'The backup is incomplete or has an unsupported data version.' };
+    }
+    try {
+      const state = normalize(envelope.data, now, false);
+      if (!sameData(envelope.data, state)) return { state: null, error: 'The backup contains invalid or unsupported data.' };
+      if (state.timer.end !== null) {
+        clampDeadline(state.timer, now);
+        state.timer.remaining = Math.max(0, Math.ceil((state.timer.end - now) / 1000));
+        state.timer.end = null;
+      }
+      return {
+        state,
+        error: null,
+        summary: {
+          exportedAt: envelope.exportedAt,
+          tasks: state.tasks.length,
+          completedTasks: state.tasks.filter(task => task.done).length,
+          sessions: state.sessions.length,
+          timerRunning: state.timer.end !== null
+        }
+      };
+    } catch (_) {
+      return { state: null, error: 'The backup contains invalid or unsupported data.' };
+    }
+  }
+
   function taskValues({ text, note = '', priority = 'normal' } = {}) {
     if (typeof text !== 'string' || !text.trim() || text.trim().length > 120) {
       throw new Error('Task title must contain 1 to 120 characters.');
@@ -348,9 +406,9 @@
   }
 
   return {
-    KEY, LEGACY_KEY, REWARD, SKINS, LORE_RULES,
+    KEY, LEGACY_KEY, REWARD, SKINS, LORE_RULES, BACKUP_FORMAT, BACKUP_VERSION, MAX_BACKUP_BYTES,
     newState, load, save, addTask, editTask, toggleTask, deleteTask,
     buySkin, selectSkin, setTimer, startTimer, pauseTimer, resetTimer, tick,
-    progress, isLoreUnlocked, stats, localDate
+    progress, isLoreUnlocked, stats, localDate, createBackup, parseBackup
   };
 });

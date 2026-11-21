@@ -7,7 +7,8 @@ This file records what was actually done in Kiro, and what was not. Keep it accu
 | Phase | Tool | What happened |
 | --- | --- | --- |
 | 0 · Base build (Nov 2026) | An external coding agent, **not Kiro** | Static app, model, browser tests and the first `.kiro/specs/spectral-focus` and `.kiro/steering/product.md`, written as hand-off documents. These are labelled "prepared outside Kiro" in the files themselves. |
-| 1 · Kiro iteration (Nov 20, 2026) | **Kiro IDE**, agent chat in Autopilot mode | Reviewed the existing spec against the code, wrote a new spec, then implemented every task in it: property-based tests, a model fix found by those tests, two UI effects, steering, hooks, CI/Pages and submission docs. |
+| 1 · Kiro iteration (Nov 20, 2026) | **Kiro IDE**, agent chat | Reviewed the existing spec against the code, wrote a new spec, then implemented every task in it: property-based tests, a model fix found by those tests, two UI effects, steering, hooks, CI/Pages and submission docs. |
+| 2 · Local backup/restore (Nov 21, 2026) | An external coding agent, **not Kiro** | Versioned JSON backup and validated restore, plus two test-timing fixes. Not described as Kiro work anywhere. |
 
 ## Spec-driven development
 

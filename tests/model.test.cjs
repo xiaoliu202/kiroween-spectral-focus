@@ -69,8 +69,108 @@ test('exports the exact constants and complete synchronous API through CommonJS'
   for (const name of [
     'newState', 'load', 'save', 'addTask', 'editTask', 'toggleTask', 'deleteTask',
     'buySkin', 'selectSkin', 'setTimer', 'startTimer', 'pauseTimer', 'resetTimer',
-    'tick', 'progress', 'isLoreUnlocked', 'stats', 'localDate'
+    'tick', 'progress', 'isLoreUnlocked', 'stats', 'localDate', 'createBackup', 'parseBackup'
   ]) assert.equal(typeof M[name], 'function', name);
+});
+
+test('versioned backups round-trip local data and pause timers while the backup is away', () => {
+  const state = M.newState();
+  const task = M.addTask(state, { text: 'Back up this task', note: 'A local note', priority: 'high' }, NOW);
+  M.toggleTask(state, task.id, true);
+  M.buySkin(state, 'turnip');
+  M.selectSkin(state, 'turnip');
+  state.settings = { reducedMotion: true, volume: 0.15 };
+  state.sessions.push(session('finished-session', 15, NOW, task.id));
+  M.setTimer(state, { mode: 'focus', minutes: 25, taskId: task.id });
+  M.startTimer(state, NOW);
+  M.tick(state, NOW + 10_000);
+
+  const backup = M.createBackup(state, NOW + 10_000);
+  assert.equal(backup.format, M.BACKUP_FORMAT);
+  assert.equal(backup.formatVersion, M.BACKUP_VERSION);
+  assert.equal(backup.data.timer.end, null);
+  assert.equal(backup.data.timer.remaining, 1490);
+  assert.equal(state.timer.end, NOW + 25 * 60_000, 'export does not mutate the live timer');
+
+  const parsed = M.parseBackup(JSON.stringify(backup), NOW + 24 * 60 * 60_000);
+  assert.equal(parsed.error, null);
+  assert.equal(parsed.summary.tasks, 1);
+  assert.equal(parsed.summary.completedTasks, 1);
+  assert.equal(parsed.summary.sessions, 1);
+  assert.equal(parsed.summary.timerRunning, false);
+  assert.deepEqual(parsed.state, backup.data);
+
+  const forgedRunning = structuredClone(backup);
+  forgedRunning.data.timer = { ...forgedRunning.data.timer, end: NOW + 5000, remaining: 5, id: 'pending-session' };
+  const paused = M.parseBackup(JSON.stringify(forgedRunning), NOW + 6000);
+  assert.equal(paused.state.timer.end, null);
+  assert.equal(paused.state.timer.remaining, 0);
+  assert.equal(paused.state.sessions.length, 1, 'importing an expired timer does not mint a completed session');
+});
+
+test('backup parser rejects malformed, unsupported, non-canonical and oversized files', () => {
+  const valid = M.createBackup(M.newState(), NOW);
+  const cases = [
+    ['{bad', 'This file is not valid JSON.'],
+    [JSON.stringify({ format: M.BACKUP_FORMAT, formatVersion: 99, exportedAt: NOW, data: M.newState() }), 'This is not a supported Spectral Focus backup.'],
+    [JSON.stringify({ ...valid, data: { ...valid.data, tasks: [{ id: 'bad', text: ' ', done: false }] } }), 'The backup contains invalid or unsupported data.']
+  ];
+  for (const [json, error] of cases) {
+    const parsed = M.parseBackup(json, NOW);
+    assert.equal(parsed.state, null);
+    assert.equal(parsed.error, error);
+  }
+  assert.equal(M.parseBackup('x'.repeat(M.MAX_BACKUP_BYTES + 1), NOW).error, 'The backup file is too large.');
+  assert.throws(() => M.createBackup({ ...M.newState(), unexpected: true }, NOW), /not valid for backup/);
+});
+
+test('backup validation rejects duplicate IDs and out-of-bound fields without changing its input', () => {
+  const source = M.newState();
+  const task = M.addTask(source, {text:'Validate fields'}, NOW);
+  const valid = M.createBackup(source, NOW);
+  const invalidChanges = [
+    state => state.tasks.push({...state.tasks[0]}),
+    state => { state.sessions = [session('same'),session('same')]; },
+    state => { state.rewardedTaskIds = [task.id,task.id]; },
+    state => { state.owned = ['harvest','harvest']; },
+    state => { state.tasks[0].text = 'x'.repeat(121); },
+    state => { state.tasks[0].note = 'n'.repeat(501); },
+    state => { state.settings.volume = 1.1; },
+    state => { state.balance = -1; },
+    state => { state.timer.remaining = 1501; },
+    state => { state.version = 3; }
+  ];
+  for (const change of invalidChanges) {
+    const backup = structuredClone(valid);
+    change(backup.data);
+    const json = JSON.stringify(backup);
+    const result = M.parseBackup(json, NOW);
+    assert.equal(result.state,null,json);
+    assert.ok(result.error);
+    assert.equal(JSON.stringify(backup),json,'validation cannot mutate the source');
+  }
+  const oversizedUtf8 = JSON.stringify(valid) + '中'.repeat(Math.floor(M.MAX_BACKUP_BYTES / 3));
+  assert.equal(M.parseBackup(oversizedUtf8,NOW).error,'The backup file is too large.');
+});
+
+test('restoring a backup preserves reward ledgers, deleted-task progress and session uniqueness', () => {
+  const source = M.newState();
+  const task = M.addTask(source,{text:'Earned once'},NOW);
+  const deleted = M.addTask(source,{text:'Deleted but remembered'},NOW);
+  M.toggleTask(source,task.id,true);
+  M.toggleTask(source,deleted.id,true);
+  M.deleteTask(source,deleted.id);
+  finish(source,15,NOW);
+  const parsed = M.parseBackup(JSON.stringify(M.createBackup(source,NOW + 15*60_000)),NOW + 20*60_000);
+  assert.equal(parsed.error,null);
+  const restored = parsed.state;
+  M.toggleTask(restored,task.id,false);
+  assert.equal(M.toggleTask(restored,task.id,true),0);
+  assert.equal(restored.balance,20);
+  assert.equal(M.progress(restored).tasks,2);
+  assert.equal(M.tick(restored,NOW + 60*60_000),null);
+  assert.equal(restored.sessions.length,1);
+  assert.equal(M.stats(restored,NOW + 60*60_000).totalMinutes,15);
 });
 
 test('newState has the exact defaults and no shared mutable collections', () => {

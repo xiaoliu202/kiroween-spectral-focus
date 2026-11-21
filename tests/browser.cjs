@@ -60,6 +60,7 @@ async function axe(p, name) {
   server = createServer(); await new Promise(resolve => server.listen(0,'127.0.0.1',resolve));
   base = `http://127.0.0.1:${server.address().port}`;
   browser = await chromium.launch(process.env.SPECTRAL_BROWSER_PATH ? {executablePath:process.env.SPECTRAL_BROWSER_PATH,headless:true} : {channel:process.env.SPECTRAL_BROWSER_CHANNEL || 'chrome',headless:true});
+  report.browserVersion=browser.version();
   page = await makePage();
   await check('Four populated views, named scene destinations, no remote runtime requests', async () => {
     const external = []; page.on('request', request => { if (!request.url().startsWith(base)) external.push(request.url()); });
@@ -150,7 +151,12 @@ async function axe(p, name) {
     await page.locator('[data-minutes="15"]').click(); assert(await page.locator('#confirm-dialog').isVisible());
     await page.keyboard.press('Escape'); assert.equal((await state()).timer.minutes,45); assert((await state()).timer.end);
     await page.locator('#timer-reset').click(); await page.locator('#confirm-cancel').click(); assert((await state()).timer.end);
-    await page.locator('#timer-reset').click(); await page.locator('#confirm-accept').click(); assert.equal(await page.locator('#clock').textContent(),'45:00');
+    await page.locator('#timer-reset').click(); await page.locator('#confirm-accept').click();
+    await page.waitForFunction(({key, remaining}) => {
+      const stored = JSON.parse(localStorage.getItem(key));
+      return stored?.timer?.remaining === remaining && stored.timer.end === null && stored.timer.id === null && stored.sessions.length === 1;
+    }, {key:M.KEY, remaining:45*60});
+    assert.equal(await page.locator('#clock').textContent(),'45:00');
     assert.equal((await state()).sessions.length,1);
     await page.locator('[data-minutes="15"]').click(); await page.locator('#timer-start').click();
     await page.locator('[data-mode="break"]').click(); await page.locator('#confirm-cancel').click(); assert.equal((await state()).timer.mode,'focus');
@@ -188,8 +194,10 @@ async function axe(p, name) {
     await nav('tasks'); await page.locator('[data-action="delete"]').first().click();
     await page.locator('#confirm-cancel').click(); assert.equal((await state()).tasks.length,6);
     await page.locator('[data-action="delete"]').first().click(); await page.locator('#confirm-accept').click();
+    await page.waitForFunction(key=>JSON.parse(localStorage.getItem(key)).tasks.length===5,M.KEY);
     assert.equal((await state()).tasks.length,5); assert.equal((await state()).rewardedTaskIds.length,5);
     await page.locator('#clear-completed').click(); await page.locator('#confirm-accept').click();
+    await page.waitForFunction(key=>JSON.parse(localStorage.getItem(key)).tasks.length===1,M.KEY);
     assert.equal((await state()).tasks.length,1); assert.equal((await state()).balance,20);
     assert.equal((await state()).rewardedTaskIds.length,5); assert.equal((await state()).sessions.length,2);
     await nav('town'); assert.equal(await page.locator('#stat-today').textContent(),'2'); assert.equal(await page.locator('#stat-minutes').textContent(),'40');
@@ -266,6 +274,101 @@ async function axe(p, name) {
     await nav('focus',paused); assert.equal(await paused.locator('#clock').textContent(),'10:00');
     await paused.locator('[data-minutes="45"]').click(); assert(await paused.locator('#confirm-dialog').isVisible()); await paused.keyboard.press('Escape');
     assert.equal(await paused.locator('#clock').textContent(),'10:00'); await paused.locator('#timer-start').click(); await paused.clock.fastForward(1000); assert.equal(await paused.locator('#clock').textContent(),'09:59');
+  });
+  await check('Local backup download, preview, cancel safety and confirmed replacement', async () => {
+    await addTask('Keep this local task','This should survive cancellation.');
+    await nav('cabinet');
+    const [download] = await Promise.all([page.waitForEvent('download'),page.locator('#backup-export').click()]);
+    const downloaded = JSON.parse(fs.readFileSync(await download.path(),'utf8'));
+    assert.equal(downloaded.format,M.BACKUP_FORMAT); assert.equal(downloaded.data.tasks.at(-1).text,'Keep this local task');
+
+    const replacement=M.newState();
+    const restoredTask=M.addTask(replacement,{text:'Restored locally',note:'No upload',priority:'normal'},fixed.getTime());
+    M.toggleTask(replacement,restoredTask.id,true);
+    replacement.settings = {reducedMotion:true,volume:0.23};
+    const file={name:'spectral-focus-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(M.createBackup(replacement,fixed.getTime())))};
+    const original=await state();
+    const chooseFile=async inputFile=>{
+      const [chooser]=await Promise.all([page.waitForEvent('filechooser'),page.locator('#backup-import-trigger').click()]);
+      await chooser.setFiles(inputFile);
+    };
+    await chooseFile(file);
+    await page.locator('#backup-dialog').waitFor({state:'visible'});
+    assert(await page.locator('#backup-confirm').isEnabled(),'a validated backup enables explicit confirmation');
+    assert((await page.locator('#backup-preview').textContent()).includes('1 task (1 completed)'));
+    assert((await page.locator('#backup-preview').textContent()).includes(`Backup format v${M.BACKUP_VERSION}`));
+    assert((await page.locator('#backup-preview').textContent()).includes('restored paused at its saved remaining time'));
+    assert.deepEqual(await state(),original,'preview does not alter current data');
+    await axe(page,'backup preview dialog');
+    for(const width of [375,1280]) {
+      await page.setViewportSize({width,height:900});
+      const bounds=await page.locator('#backup-dialog').evaluate(el=>({left:el.getBoundingClientRect().left,right:el.getBoundingClientRect().right,overflow:el.scrollWidth>el.clientWidth}));
+      assert(bounds.left>=0 && bounds.right<=width && !bounds.overflow,`${width}px backup preview fits the viewport`);
+    }
+    await page.keyboard.press('Shift+Tab');
+    assert.equal(await page.evaluate(()=>document.activeElement.getAttribute('aria-label')),'Close backup preview');
+    await page.keyboard.press('Shift+Tab');
+    assert.equal(await page.evaluate(()=>document.activeElement.id),'backup-confirm');
+    await page.keyboard.press('Tab');
+    assert.equal(await page.evaluate(()=>document.activeElement.getAttribute('aria-label')),'Close backup preview');
+    await page.locator('#backup-cancel').click(); await page.locator('#backup-dialog').waitFor({state:'hidden'});
+    assert.deepEqual(await state(),original,'cancel leaves current data untouched');
+    await page.waitForFunction(()=>document.activeElement.id==='backup-import-trigger');
+
+    await chooseFile(file);
+    await page.locator('#backup-dialog').waitFor({state:'visible'});
+    await page.waitForFunction(() => !document.querySelector('#backup-confirm').disabled);
+    await page.locator('#backup-confirm').click(); await page.locator('#backup-dialog').waitFor({state:'hidden'});
+    const imported=await state();
+    assert.equal(imported.tasks.length,1); assert.equal(imported.tasks[0].text,'Restored locally');
+    assert.equal(imported.tasks[0].note,'No upload'); assert.equal(imported.balance,10);
+    assert.deepEqual(imported.rewardedTaskIds,[restoredTask.id]);
+    assert.equal(await page.locator('#reduce-motion').isChecked(),true);
+    assert.equal(await page.locator('#audio-volume').inputValue(),'23');
+    assert.equal(await page.locator('#volume-value').textContent(),'23%');
+    assert(await page.locator('body').evaluate(el=>el.classList.contains('reduce-motion')));
+    await page.reload();
+    assert.deepEqual(await state(),imported,'restore persists after reload');
+    await nav('tasks');
+    await page.locator('.task-check').uncheck(); await page.locator('.task-check').check();
+    assert.equal((await state()).balance,10,'restored tasks do not receive a second reward');
+    await nav('cabinet');
+
+    const afterRestore=await state();
+    await chooseFile({name:'broken.json',mimeType:'application/json',buffer:Buffer.from('{bad')});
+    await page.waitForFunction(() => document.querySelector('#backup-status').textContent.includes('valid JSON'));
+    assert.deepEqual(await state(),afterRestore,'invalid file cannot replace saved data');
+    await chooseFile({name:'large.json',mimeType:'application/json',buffer:Buffer.alloc(M.MAX_BACKUP_BYTES+1,32)});
+    await page.waitForFunction(()=>document.querySelector('#backup-status').textContent.includes('too large'));
+    assert.deepEqual(await state(),afterRestore,'oversized file cannot replace saved data');
+
+    const beforeQuotaFailure=JSON.stringify(afterRestore);
+    await page.evaluate(key=>{
+      const original=Storage.prototype.setItem;
+      Storage.prototype.setItem=function(name,value){
+        if(name===key) {
+          Storage.prototype.setItem=original;
+          throw new DOMException('Quota exceeded','QuotaExceededError');
+        }
+        return original.call(this,name,value);
+      };
+    },M.KEY);
+    const different=M.newState();
+    M.addTask(different,{text:'Must not replace saved data'},fixed.getTime());
+    const differentFile={...file,buffer:Buffer.from(JSON.stringify(M.createBackup(different,fixed.getTime())))};
+    await chooseFile(differentFile);
+    await page.locator('#backup-dialog').waitFor({state:'visible'});
+    await page.waitForFunction(() => !document.querySelector('#backup-confirm').disabled);
+    await page.locator('#backup-confirm').click();
+    assert(await page.locator('#backup-dialog').isVisible(),'failed write leaves confirmation open');
+    assert((await page.locator('#backup-error').textContent()).includes('has not been replaced'));
+    assert.equal(await page.evaluate(key=>localStorage.getItem(key),M.KEY),beforeQuotaFailure);
+    assert.deepEqual(await state(),afterRestore,'failed storage write leaves application state unchanged');
+    await page.locator('#backup-cancel').click();
+    await nav('tasks');
+    assert.equal(await page.locator('.task-body > label').textContent(),'Restored locally','failed restore also leaves the live state untouched');
+    await page.locator('.task-check').uncheck();
+    assert.equal((await state()).tasks[0].done,false,'a failed restore does not block later normal saves');
   });
   await check('Corrupted and blocked storage stay usable, warn clearly and preserve original data', async () => {
     const damaged='{not-json'; const p=await makePage({key:M.KEY,value:damaged});

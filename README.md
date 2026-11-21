@@ -19,7 +19,7 @@ Open **http://127.0.0.1:8000**. Node.js 20+ is required for the bundled developm
 | **The Town** | Explore the original illustrated street; open the task house, Candle Room or Folklore Cabinet; see your selected lantern, current session, completed-task count and seven local days of focus. |
 | **Hauntings** | Add and edit tasks with notes and priorities; search/filter, complete/reopen, delete and clear settled tasks. A first completion releases the task's ghost with a floating +10 and earns 10 virtual candy. |
 | **Candle Room** | Link a task to a 15/25/45-minute focus session; pause, resume or reset; take a five-minute rest. A shrinking candle visualizes the remaining time; when it burns out, smoke curls from the wick. Synthesized night wind is opt-in with volume control. |
-| **Folklore Cabinet** | Spend virtual candy on lanterns, equip your favourite, and discover six original, source-cited culture cards. Sources remain readable even when a card is locked. |
+| **Folklore Cabinet** | Spend virtual candy on lanterns, equip your favourite, and discover six original, source-cited culture cards. Sources remain readable even when a card is locked. Export a private JSON backup or preview and confirm a validated restore. |
 
 ### Small rewards, honest rules
 
@@ -37,7 +37,9 @@ All scene, ghost, icon and lantern illustrations are original SVG/CSS. The wind 
 
 ## Privacy, persistence and migration
 
-Data stays in this browser’s localStorage under `spectral-focus-v2`. It includes task notes, a once-only reward ledger, owned lanterns, settings and completed focus sessions. Nothing is uploaded. Clear site data only if you intend to remove your own records.
+Data stays in this browser’s localStorage under `spectral-focus-v2`. It includes task notes, a once-only reward ledger, owned lanterns, settings and completed focus sessions. Nothing is uploaded. In **Folklore Cabinet → Local data backup**, download a versioned JSON copy or select a backup to preview and restore. Restore replaces this site’s local data only after explicit confirmation; it does not merge. A timer in a backup is restored paused at its saved remaining time. Backup files contain task notes and history, so keep them private.
+
+Backups and restores are limited to **1 MB (1,000,000 bytes)** and use backup format v1 containing app data v2. Invalid JSON, unsupported versions, duplicate IDs and out-of-bound fields are rejected rather than repaired and saved. Cancelling the preview or failing to write storage leaves existing data unchanged. Backups are plain JSON, not encrypted. Download a current copy before replacing data; restoring is not an undo/merge operation.
 
 If v2 does not exist, the app restores valid `spectral-focus-v1` task titles/completion states, selected duration and running or paused timer. **The original v1 record is never removed or overwritten.** Previously completed tasks receive no retroactive candy and cannot be farmed by reopening them.
 

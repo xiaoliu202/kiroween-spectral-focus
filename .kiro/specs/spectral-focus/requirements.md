@@ -1,6 +1,6 @@
 # Spectral Focus · Halloween Town requirements
 
-Status: current specification and handoff documentation, prepared outside Kiro. This file does not prove Kiro execution. The exact approved goal is retained in `.pi/goal/spectral-focus-万圣夜小镇-文化驱动的前端与功能升级-20261117-2116.md`. Later Kiro work is in `../kiro-iteration/`; the numbers below (52 model tests, nine screenshots) describe the November 17 baseline.
+Status: current specification and handoff documentation, prepared outside Kiro. This file does not prove Kiro execution. The original goal text is kept locally and is not part of the repository. Later Kiro work is in `../kiro-iteration/`; the numbers below (52 model tests, nine screenshots) describe the November 17 baseline.
 
 ## Product goal
 

@@ -11,6 +11,7 @@
   const state = loaded.state;
   let saveBlocked = !!loaded.warning;
   let editingId = null, taskFilter = 'all', currentView = 'town';
+  let pendingBackup = null;
   let toastTimeout, lastClock = '', lastTimerControl = '', lastDate = M.localDate(Date.now());
   const dialogTriggers = new Map();
 
@@ -78,6 +79,77 @@
   $('confirm-accept').addEventListener('click', () => $('confirm-dialog').close('yes'));
   $('confirm-cancel').addEventListener('click', () => $('confirm-dialog').close('no'));
   all('[data-close]').forEach(button => button.addEventListener('click', () => $(button.dataset.close).close('no')));
+
+  $('backup-export').addEventListener('click', () => {
+    try {
+      const backup = M.createBackup(state, Date.now());
+      const blob = new Blob([JSON.stringify(backup, null, 2)], {type:'application/json'});
+      if (blob.size > M.MAX_BACKUP_BYTES) {
+        text('backup-status','This backup exceeds the 1 MB restore limit. No file was downloaded; your local data is unchanged.');
+        return;
+      }
+      const url = URL.createObjectURL(blob);
+      const link = element('a');
+      link.href = url; link.download = `spectral-focus-backup-${M.localDate(Date.now())}.json`;
+      document.body.append(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      text('backup-status','Backup downloaded. It contains your task notes and local history; keep the file somewhere private.');
+      announce('Local backup downloaded.');
+    } catch (_) {
+      text('backup-status','The backup could not be created. Your saved data has not changed.');
+    }
+  });
+  $('backup-import-trigger').addEventListener('click', () => $('backup-file').click());
+  $('backup-file').addEventListener('change', async event => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    pendingBackup = null; $('backup-confirm').disabled = true; text('backup-error','');
+    if (file.size > M.MAX_BACKUP_BYTES) { text('backup-status','The backup file is too large (maximum 1 MB).'); return; }
+    text('backup-status','Checking backup file…');
+    try {
+      const parsed = M.parseBackup(await file.text());
+      if (parsed.error || !parsed.state) { text('backup-status',parsed.error || 'The backup could not be read.'); return; }
+      pendingBackup = parsed.state;
+      const info = parsed.summary;
+      const exported = new Date(info.exportedAt).toLocaleString();
+      const timer = ' The timer, if present, will be restored paused at its saved remaining time.';
+      const taskWord = info.tasks === 1 ? 'task' : 'tasks';
+      text('backup-preview',`Backup format v${M.BACKUP_VERSION}, exported ${exported}: ${info.tasks} ${taskWord} (${info.completedTasks} completed), ${info.sessions} completed focus sessions.${timer} Restoring it replaces all current local tasks, notes, timer, settings, rewards and lanterns.`);
+      text('backup-status','Backup checked. Review the replacement details before continuing.');
+      $('backup-confirm').disabled = false;
+      openDialog('backup-dialog','backup-cancel');
+    } catch (_) {
+      text('backup-status','The backup file could not be read. Your saved data has not changed.');
+    }
+  });
+  $('backup-dialog').addEventListener('close', () => {
+    if ($('backup-dialog').open) return;
+    pendingBackup = null;
+    $('backup-confirm').disabled = true;
+  });
+  $('backup-confirm').addEventListener('click', () => {
+    if (!pendingBackup) return;
+    const replacement = pendingBackup;
+    if (!M.save(storage,replacement)) {
+      text('backup-status','Restore failed. Existing local data has not been replaced.');
+      text('backup-error','Could not save the backup. Your current data has not been replaced.');
+      return;
+    }
+    for (const key of Object.keys(state)) delete state[key];
+    Object.assign(state,replacement);
+    saveBlocked = false;
+    $('storage-warning').hidden = true; text('storage-warning','');
+    $('audio-volume').value = state.settings.volume * 100;
+    text('volume-value',`${Math.round(state.settings.volume*100)}%`);
+    window.SpectralAudio.setVolume(state.settings.volume);
+    $('reduce-motion').checked = state.settings.reducedMotion;
+    document.body.classList.toggle('reduce-motion',state.settings.reducedMotion);
+    $('backup-dialog').close('yes');
+    lastClock = ''; lastTimerControl = ''; renderAll(); settle();
+    text('backup-status','Backup restored. This browser’s local data has been replaced.');
+    announce('Local backup restored.');
+  });
 
   all('[data-icon]').forEach(node => { node.innerHTML = A.icon(node.dataset.icon); });
   all('[data-art]').forEach(node => { node.innerHTML = node.dataset.art === 'ghost' ? A.ghost() : A.lantern(); });

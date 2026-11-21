@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-11-20T03:20:55.791Z",
+  "startedAt": "2026-11-21T04:58:42.600Z",
   "engine": "Chrome via Playwright",
   "clock": "Controlled clock; no full-length wall-clock endurance claim.",
   "checks": [
@@ -56,6 +56,10 @@
       "status": "passed"
     },
     {
+      "name": "Local backup download, preview, cancel safety and confirmed replacement",
+      "status": "passed"
+    },
+    {
       "name": "Corrupted and blocked storage stay usable, warn clearly and preserve original data",
       "status": "passed"
     }
@@ -73,6 +77,7 @@
     "focus-active-1280.png"
   ],
   "errors": [],
-  "finishedAt": "2026-11-20T03:21:18.274Z",
+  "browserVersion": "157.0.8103.80",
+  "finishedAt": "2026-11-21T04:59:11.841Z",
   "status": "passed"
 }
