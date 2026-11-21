@@ -4,7 +4,7 @@ Record the deployed GitHub Pages URL in a fresh browser profile, so no personal 
 
 | Time | Screen | Say (English) |
 | --- | --- | --- |
-| 0:00–0:15 | Town view, slow mouse over the cottages | "Spectral Focus is a Halloween town for people who put things off. Tasks become ghosts, focus is a candle, and finishing work settles the town." |
+| 0:00–0:15 | Town view, slow mouse over the cottages | "Spectral Focus is a Halloween town for people who put things off. Every unfinished task is a ghost drifting across your night. Focus is a candle, and finishing work clears the sky." |
 | 0:15–0:35 | Click the Hauntings cottage, add two tasks with a note and a priority | "Every task is a haunting. It stays private: no account, no server, everything stays in your browser." |
 | 0:35–1:05 | Click Focus on a task, choose 15 min, light the candle. Speed up time with DevTools or cut to a shorter take | "Link a task and light the candle. It burns down as time passes, survives refresh, and only fully finished sessions count." |
 | 1:05–1:20 | Let the candle finish, then show the smoke curl and the completion message | "When the candle goes out, the time goes in your journal. The task stays yours to finish." |

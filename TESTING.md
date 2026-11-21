@@ -1,5 +1,9 @@
 # Verification · Halloween Town v2
 
+## Night drift and living town (November 21, 2026)
+
+Added a page-wide, `aria-hidden`, pointer-transparent drift layer behind the content, with ghosts, the equipped lantern and bats, plus scene motion: flapping bats, chimney smoke, flickering pumpkin faces, a breathing moon glow and a wandering ghost. Browser checks now confirm that the layer is decorative, never sits on top of a control at its centre, runs its animations, shows two ghosts on an empty board and one per unsettled task (max four) afterwards, and is removed under both the app and system reduced-motion settings, which also freeze the town. `npm run verify:report` passed: 63 model tests, 15 browser groups, no console errors.
+
 ## Observed result — November 21, 2026 (local improvement phases 0–1)
 
 These changes were implemented with an external coding agent, not as a new Kiro iteration. The current local verification passed with **63 model tests** (57 examples and 6 fast-check properties), **15 real-Chrome browser groups**, no console/runtime errors, and syntax/HTML-id/asset checks. The browser JSON records the actual Chrome version. Current evidence is regenerated in `evidence/`; the section below retains the historical November 20 counts and attribution.

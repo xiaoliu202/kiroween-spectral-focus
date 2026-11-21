@@ -356,6 +356,60 @@ dialog label { display: block; margin: 15px 0 7px; font-size: 11px; color: #e8d4
 @keyframes treat-rise { 0% { opacity: 0; transform: translateY(6px); } 25% { opacity: 1; } 100% { opacity: 0; transform: translateY(-34px); } }
 @keyframes smoke-curl { 0% { opacity: 0; transform: translate(0,0) scale(.6); } 20% { opacity: .45; } 60% { transform: translate(6px,-34px) scale(1.4); } 100% { opacity: 0; transform: translate(-5px,-64px) scale(2.1); } }
 @keyframes arrive { from { opacity: .6; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+/* ---- Night drift: page-wide spirits behind the content (decorative, pointer-transparent). ---- */
+.night-drift { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; transition: opacity 1.2s; }
+.app-shell { position: relative; z-index: 1; }
+.drift { position: absolute; left: 0; display: block; will-change: transform; transition: opacity 1.8s ease; }
+.drift-body { display: block; }
+.drift svg { display: block; width: 100%; height: auto; }
+.drift-ghost { width: 46px; color: #d8c8ea; opacity: .62; filter: drop-shadow(0 0 14px #c9a8ff55); }
+.drift-ghost.is-settled { opacity: 0; }
+.drift-ghost .ghost-art { width: 100%; height: auto; }
+.drift-ghost .drift-body { animation: drift-bob 3.6s ease-in-out infinite alternate; }
+.drift-lantern { width: 54px; opacity: .78; filter: drop-shadow(0 0 16px #f39b4a66); }
+.drift-lantern .drift-body { animation: drift-sway 4.8s ease-in-out infinite alternate; transform-origin: 50% -40%; }
+.drift-lantern .lantern-face { animation: pumpkin-flicker 1.9s ease-in-out infinite alternate; }
+.drift-bat { width: 44px; color: #4a3a5c; opacity: .95; filter: drop-shadow(0 0 6px #b48cd855); }
+.drift-bat .bat-wings { animation: bat-flap .28s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
+.drift-g1 { top: 12vh; animation: drift-across 46s linear infinite; animation-delay: -6s; }
+.drift-g2 { top: 58vh; width: 38px; animation: drift-across 58s linear infinite reverse; animation-delay: -31s; }
+.drift-g3 { top: 33vh; width: 30px; opacity: .45; animation: drift-across 70s linear infinite; animation-delay: -48s; }
+.drift-g4 { top: 80vh; width: 52px; animation: drift-across 52s linear infinite reverse; animation-delay: -14s; }
+.drift-l1 { top: 22vh; animation: drift-rise 64s linear infinite; animation-delay: -20s; }
+.drift-l2 { top: 70vh; width: 42px; animation: drift-across 80s linear infinite reverse; animation-delay: -55s; }
+.drift-b1 { top: 6vh; animation: bat-swoop 19s ease-in-out infinite; animation-delay: -4s; }
+.drift-b2 { top: 44vh; width: 30px; animation: bat-swoop 26s ease-in-out infinite reverse; animation-delay: -15s; }
+/* A focus session calms the night so the candle stays the centre of attention. */
+body.is-focusing .night-drift { opacity: .4; }
+@keyframes drift-across { from { transform: translateX(-12vw); } to { transform: translateX(112vw); } }
+@keyframes drift-rise { 0% { transform: translate(-10vw, 30vh); } 50% { transform: translate(50vw, -8vh); } 100% { transform: translate(112vw, 24vh); } }
+@keyframes drift-bob { from { transform: translateY(-12px) rotate(-6deg); } to { transform: translateY(14px) rotate(5deg); } }
+@keyframes drift-sway { from { transform: rotate(-9deg) translateY(-6px); } to { transform: rotate(8deg) translateY(8px); } }
+@keyframes bat-swoop { 0% { transform: translate(-10vw, 0); } 25% { transform: translate(25vw, 9vh); } 50% { transform: translate(55vw, -2vh); } 75% { transform: translate(82vw, 11vh); } 100% { transform: translate(112vw, 1vh); } }
+@keyframes bat-flap { from { transform: scaleY(1); } to { transform: scaleY(.35); } }
+@keyframes pumpkin-flicker { 0% { opacity: .55; } 40% { opacity: .95; } 60% { opacity: .7; } 100% { opacity: 1; } }
+
+/* ---- Living town scene ---- */
+.town-bat { transform-box: fill-box; transform-origin: center; }
+.bat-one { animation: bat-glide 9s ease-in-out infinite alternate; }
+.bat-two { animation: bat-glide 12s ease-in-out infinite alternate-reverse; }
+.bat-three { animation: bat-glide 7s ease-in-out -3s infinite alternate; }
+.bat-flap { transform-box: fill-box; transform-origin: center; animation: bat-flap .3s ease-in-out infinite alternate; }
+.chimney-smoke circle { transform-box: fill-box; transform-origin: center; opacity: 0; animation: chimney-puff 6s ease-out infinite; }
+.chimney-smoke circle:nth-child(2) { animation-delay: 2s; }
+.chimney-smoke circle:nth-child(3) { animation-delay: 4s; }
+.pumpkin-face { animation: pumpkin-flicker 2.2s ease-in-out infinite alternate; filter: drop-shadow(0 0 4px #ffb04d); }
+.town-moonglow { transform-box: fill-box; transform-origin: center; animation: moon-breathe 7s ease-in-out infinite alternate; }
+.town-wanderer { animation: wander 24s ease-in-out infinite alternate; }
+.town-wanderer-bob { animation: ghost-float 2.8s ease-in-out infinite alternate; }
+@keyframes bat-glide { 0% { transform: translate(-40px, 8px); } 50% { transform: translate(20px, -14px); } 100% { transform: translate(70px, 6px); } }
+@keyframes chimney-puff { 0% { opacity: 0; transform: translate(0,0) scale(.6); } 15% { opacity: .35; } 100% { opacity: 0; transform: translate(14px,-58px) scale(2.6); } }
+@keyframes moon-breathe { from { opacity: .7; transform: scale(.94); } to { opacity: 1; transform: scale(1.06); } }
+@keyframes wander { 0% { transform: translate(-70px, 4px); } 50% { transform: translate(-5px, -10px); } 100% { transform: translate(55px, 2px); } }
+/* Without motion the night is still: no drifting layer at all. */
+body.reduce-motion .night-drift { display: none; }
+@media (prefers-reduced-motion: reduce) { .night-drift { display: none; } }
+@media (max-width: 700px) { .drift-g3, .drift-g4, .drift-l2, .drift-b2 { display: none; } .drift-ghost { width: 34px; } .drift-lantern { width: 40px; } }
 body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 @media (min-width: 1500px) { main { padding-inline: 48px; } .town-scene { max-height: 460px; } .page-heading { padding-block: 40px 30px; } }

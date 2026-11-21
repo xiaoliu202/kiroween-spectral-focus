@@ -48,10 +48,10 @@ window.SpectralArt = (() => {
         <pattern id="shingles" width="18" height="12" patternUnits="userSpaceOnUse"><path d="M0 11h18M9 0v11" stroke="#c67c57" stroke-opacity=".12" fill="none"/></pattern>
       </defs>
       <path fill="url(#sky)" d="M0 0h1100v390H0z"/>
-      <circle cx="872" cy="100" r="157" fill="url(#moonglow)"/><circle cx="872" cy="100" r="54" fill="#efcfaa"/>
+      <circle class="town-moonglow" cx="872" cy="100" r="157" fill="url(#moonglow)"/><circle cx="872" cy="100" r="54" fill="#efcfaa"/>
       <g fill="#c9aa94" opacity=".36"><circle cx="854" cy="80" r="10"/><circle cx="889" cy="122" r="15"/><circle cx="896" cy="75" r="5"/></g>
       <g fill="#d4bbad" opacity=".65"><circle cx="125" cy="62" r="1.5"/><circle cx="316" cy="32" r="1.5"/><circle cx="450" cy="65" r="1"/><circle cx="649" cy="29" r="1.5"/><circle cx="739" cy="99" r="1.5"/><circle cx="1035" cy="55" r="1.5"/><circle cx="195" cy="100" r="1"/><path d="m583 64 2-5 2 5 5 2-5 2-2 5-2-5-5-2z"/></g>
-      <g fill="#1b1829"><path d="M750 71q9-11 17 0l4-9 5 9q8-10 19-1l-17 7-5 8-5-8z"/><path d="M965 150q7-9 14 0l3-7 4 7q7-8 14 0l-13 5-4 6-4-6z"/><path d="M710 106q5-7 10 0l2-5 3 5q5-6 11 0l-10 4-3 4-3-4z"/></g>
+      <g fill="#1b1829"><g class="town-bat bat-one"><g class="bat-flap"><path d="M750 71q9-11 17 0l4-9 5 9q8-10 19-1l-17 7-5 8-5-8z"/></g></g><g class="town-bat bat-two"><g class="bat-flap"><path d="M965 150q7-9 14 0l3-7 4 7q7-8 14 0l-13 5-4 6-4-6z"/></g></g><g class="town-bat bat-three"><g class="bat-flap"><path d="M710 106q5-7 10 0l2-5 3 5q5-6 11 0l-10 4-3 4-3-4z"/></g></g></g>
       <path d="M0 259q150-85 283-18t256-13q139-59 284 12 139-68 277 4v146H0Z" fill="#35283e"/>
       <path d="M0 308q200-69 362-14t320-4q191-47 418 8v92H0Z" fill="url(#hill)"/>
       <path d="M540 265q-25 38 17 55t-25 70h257q-62-47-153-57-92-13-35-68z" fill="url(#path)"/>
@@ -59,17 +59,23 @@ window.SpectralArt = (() => {
       <g stroke="#211a2a" fill="none" stroke-linecap="round"><path d="M73 330 89 103m-7 86-31-39-4-40m7 44-32-12m58 77 48-45 12-46m-13 47 32-6M88 127l25-36m-31 155-47-35m1002 129-16-186m-3 30-38-34-6-33m44 87 45-51 3-36m-45 106-43-18m50-69 25-39" stroke-width="8"/><path d="m66 169-38-50m76 77 3-40m910 4-18-47" stroke-width="4"/></g>
       <!-- Left cottage: task board -->
       <g class="task-cottage"><path d="m174 207 84-75 82 75-4 95H180Z" fill="#503541" stroke="#1a1526" stroke-width="5"/><path d="M162 209 257 116l100 94-18 9-83-76-79 76Z" fill="#2c2435" stroke="#1a1526" stroke-width="5"/><path d="m181 193 76-72 80 75" fill="url(#shingles)"/><path d="M291 143v-36h20v54" fill="#3c2936" stroke="#1a1526" stroke-width="4"/><path d="M230 302v-58q23-20 45 0v58" fill="#241d2c" stroke="#b77951" stroke-width="3"/><g class="cottage-window" fill="#dda264" stroke="#261d2e" stroke-width="4"><path d="M192 224h25v34h-25zM291 224h25v34h-25z"/><circle cx="256" cy="180" r="16"/></g><path d="M256 164v32m-16-16h32" stroke="#352536" stroke-width="4"/><path d="M186 304h145" stroke="#986c53" stroke-width="4"/></g>
+      <g class="chimney-smoke" fill="#bfb0c8"><circle cx="301" cy="100" r="6"/><circle cx="301" cy="100" r="6"/><circle cx="301" cy="100" r="6"/></g>
       <!-- Tall candle house -->
       <g class="focus-cottage"><path d="M467 277V147l59-68 58 68v130Z" fill="#483445" stroke="#1b1727" stroke-width="5"/><path d="m453 151 74-90 73 91-16 5-58-68-59 70Z" fill="#231e30" stroke="#191524" stroke-width="5"/><path d="M512 83V44h24v39" fill="#35283e"/><path d="M514 277v-57q12-12 24 0v57" fill="#231b2a"/><g class="cottage-window" fill="#efb771" stroke="#2b2031" stroke-width="4"><path d="M487 164h24v30h-24zM541 164h24v30h-24z"/><path d="M514 124q12-21 24 0v19h-24z"/></g><path d="M488 166v27m65-27v27" stroke="#65404a" stroke-width="3"/><path d="M461 278h130" stroke="#9b6a52" stroke-width="4"/><path d="m522 40 6-12 6 12" fill="#d7a26c"/></g>
       <!-- Folklore bookshop -->
       <g><path d="M690 224h128v75H690z" fill="#503f4b" stroke="#211927" stroke-width="5"/><path d="m674 224 80-68 80 68Z" fill="#2b2434" stroke="#1c1727" stroke-width="5"/><path d="m688 214 67-55 66 55Z" fill="url(#shingles)"/><path d="M742 299v-51h26v51" fill="#231b2b" stroke="#a47457" stroke-width="3"/><g class="cottage-window" fill="#e3ac72" stroke="#302236" stroke-width="4"><path d="M702 247h25v28h-25zM783 247h24v28h-24z"/><path d="m746 202 9-16 9 16v15h-18z"/></g><path d="M686 301h140" stroke="#97715d" stroke-width="4"/></g>
       <g fill="#987c82" stroke="#2c2435" stroke-width="3"><path d="M941 298v-20a11 11 0 0 1 22 0v20zM974 303v-14a9 9 0 0 1 18 0v14z"/><path d="M934 299h36m-1 6h28"/></g>
       <g fill="#cb702c" stroke="#743f2d" stroke-width="2"><ellipse cx="162" cy="310" rx="17" ry="13"/><ellipse cx="187" cy="315" rx="12" ry="10"/><ellipse cx="828" cy="307" rx="17" ry="14"/><ellipse cx="854" cy="312" rx="12" ry="10"/></g><g stroke="#60704a" stroke-width="4"><path d="m161 297 3-7m24 15-1-6m642-5-2-8m27 16 2-6"/></g>
+      <g class="pumpkin-face" fill="#ffd27a"><path d="m154 306 4-5 3 5zm10 0 3-5 4 5zm-9 6q7 5 14 0l-3 3h-8z"/><path d="m820 303 4-5 3 5zm10 0 3-5 4 5zm-9 6q7 5 14 0l-3 3h-8z"/></g>
       <g class="town-spirit"><path d="M365 257v-22a17 17 0 0 1 34 0v22l-9-6-8 7-8-6z" fill="#c6bed0" opacity=".85"/><path d="M376 235v4m12-4v4" stroke="#302537" stroke-width="3" stroke-linecap="round"/></g>
+      <g class="town-wanderer"><g class="town-wanderer-bob"><path d="M600 236v-19a14 14 0 0 1 28 0v19l-7-5-7 6-7-6z" fill="#d9cfe2" opacity=".8"/><path d="M609 217v3m10-3v3" stroke="#302537" stroke-width="3" stroke-linecap="round"/></g></g>
       <g class="town-settled" opacity="0"><path d="M912 240v-20a14 14 0 0 1 28 0v20l-7-5-7 6-7-6z" fill="#d2bdbe"/><path d="M921 220v3m11-3v3" stroke="#302537" stroke-width="3"/></g>
       <g fill="#ac7250" opacity=".65"><path d="m323 345 8-8 7 9-8 4zm382 12 7-9 12 4-4 8zM122 362l7-7 9 6-8 5zM902 348l8-6 10 9-12 3z"/></g>
       <path d="M0 369q160-24 319-1t290-6q227-26 491 3v25H0Z" fill="#17131f"/>
     </svg>`;
   }
-  return {icon, ghost, lantern, town};
+  function bat(cls = '') {
+    return `<svg class="bat-art ${cls}" viewBox="0 0 64 30" aria-hidden="true"><g class="bat-wings" fill="currentColor"><path d="M32 11c-2-4-5-6-8-6 1 2 1 4 0 5-5-4-13-5-22 0 6 1 10 5 12 11 3-3 8-4 12-1 1-3 3-5 6-5s5 2 6 5c4-3 9-2 12 1 2-6 6-10 12-11-9-5-17-4-22 0-1-1-1-3 0-5-3 0-6 2-8 6z"/></g><circle cx="29" cy="12" r="1.2" fill="#ffc985"/><circle cx="35" cy="12" r="1.2" fill="#ffc985"/></svg>`;
+  }
+  return {icon, ghost, lantern, town, bat};
 })();

@@ -35,7 +35,8 @@ async function makePage(seed, options = {}) {
   assert.equal(await p.locator('.lore-card').count(),6, 'Application initialized');
   return p;
 }
-async function state(p = page) { return p.evaluate(key => JSON.parse(localStorage.getItem(key)), M.KEY); }
+async function driftGhosts(p = page) { return p.locator('.drift-ghost:not(.is-settled)').count(); }
+async function expectedDrift(p = page) { const s = await state(p); const open = s ? s.tasks.filter(t => !t.done).length : 0; return s && s.tasks.length ? Math.min(open, 4) : 2; }async function state(p = page) { return p.evaluate(key => JSON.parse(localStorage.getItem(key)), M.KEY); }
 async function nav(view, p = page) { await p.locator(`[data-nav="${view}"]`).click(); assert.equal(await p.locator(`#view-${view}`).isVisible(),true); }
 async function addTask(title, note = '', priority = 'normal', p = page) {
   await nav('tasks',p); await p.locator('#new-task').click();
@@ -69,6 +70,16 @@ async function axe(p, name) {
     assert.equal(await page.locator('.place').count(),3);
     for (const view of ['tasks','focus','cabinet']) { await page.locator(`.place-${view === 'tasks' ? 'tasks' : view === 'focus' ? 'focus' : 'cabinet'}`).click(); assert(await page.locator(`#view-${view}`).isVisible()); await nav('town'); }
     assert.deepEqual(external,[]);
+    const drift = page.locator('.night-drift');
+    assert.equal(await drift.getAttribute('aria-hidden'),'true');
+    assert.equal(await drift.evaluate(el => getComputedStyle(el).pointerEvents),'none');
+    assert.equal(await page.locator('.drift-ghost').count(),4); assert.equal(await page.locator('.drift-lantern .lantern-art').count(),2); assert.equal(await page.locator('.drift-bat .bat-art').count(),2);
+    assert.equal(await page.locator('.drift-g1').evaluate(el => getComputedStyle(el).animationName),'drift-across');
+    assert.equal(await page.locator('.bat-one').evaluate(el => getComputedStyle(el).animationName),'bat-glide');
+    assert.equal(await page.locator('.chimney-smoke circle').first().evaluate(el => getComputedStyle(el).animationName),'chimney-puff');
+    assert.equal(await driftGhosts(),2, 'An empty board has two friendly visitors');
+    const behind = await page.evaluate(() => { const r = document.querySelector('.town-heading .button.primary').getBoundingClientRect(); return document.elementFromPoint(r.left + r.width/2, r.top + r.height/2).closest('.night-drift') === null; });
+    assert(behind, 'Drift layer never sits on top of controls');
   });
   await check('Task editor, whitespace validation, editing, notes, priority and safe literal text', async () => {
     await nav('tasks'); await page.locator('#new-task').click();
@@ -116,7 +127,9 @@ async function axe(p, name) {
     assert.equal(await page.locator('#town-title').evaluate(() => getComputedStyle(document.querySelector('.flame')).opacity),'0');
   });
   await check('Task completion fades ghost; reopen/recomplete cannot farm candy; filters work', async () => {
-    await nav('tasks'); await page.locator('.task-check').first().check();
+    await nav('tasks'); const driftBefore = await driftGhosts(); assert.equal(driftBefore, await expectedDrift());
+    await page.locator('.task-check').first().check();
+    assert.equal(await driftGhosts(), await expectedDrift(), 'A drifting ghost settles with its task'); assert(await driftGhosts() <= driftBefore);
     const first = page.locator('.task-card').first();
     assert(await first.evaluate(el => el.classList.contains('just-settled')), 'First completion highlights the card');
     assert.equal(await first.locator('.settle-wisp').count(),1); assert.equal(await first.locator('.settle-treat').textContent(),'+10');
@@ -221,10 +234,14 @@ async function axe(p, name) {
     await page.keyboard.press('Escape'); assert.equal(await page.evaluate(() => document.activeElement.id),'new-task');
     await page.locator('#reduce-motion').check(); await nav('town');
     assert.equal(await page.locator('.town-spirit').evaluate(el => getComputedStyle(el).animationName),'none');
+    assert.equal(await page.locator('.night-drift').evaluate(el => getComputedStyle(el).display),'none', 'App setting removes the drift layer');
+    assert.equal(await page.locator('.bat-one').evaluate(el => getComputedStyle(el).animationName),'none');
     await page.reload(); assert(await page.locator('#reduce-motion').isChecked());
     await page.locator('#reduce-motion').uncheck(); await page.emulateMedia({reducedMotion:'reduce'});
     assert.equal(await page.locator('.town-spirit').evaluate(el => getComputedStyle(el).animationName),'none');
     assert.equal(await page.locator('.smoke span').first().evaluate(el => getComputedStyle(el).animationName),'none');
+    assert.equal(await page.locator('.night-drift').evaluate(el => getComputedStyle(el).display),'none', 'System setting removes the drift layer');
+    assert.equal(await page.locator('.town-wanderer').evaluate(el => getComputedStyle(el).animationName),'none');
     const calm = await makePage(); await calm.emulateMedia({reducedMotion:'reduce'});
     await addTask('A quiet completion','', 'normal', calm); await calm.locator('.task-check').first().check();
     assert.equal(await calm.locator('.settle-wisp, .settle-treat').count(),0, 'No release animation under reduced motion');

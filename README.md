@@ -18,7 +18,7 @@ Open **http://127.0.0.1:8000**. Node.js 20+ is required for the bundled developm
 
 | Place | What you can do |
 | --- | --- |
-| **The Town** | Explore the original illustrated street; open the task house, Candle Room or Folklore Cabinet; see your selected lantern, current session, completed-task count and seven local days of focus. |
+| **The Town** | Explore the original illustrated street, where bats flap past the moon, chimney smoke rises, pumpkins flicker and a small ghost wanders between the cottages. Behind every page, ghosts, your equipped lantern and bats drift across the night: one ghost per unsettled task (up to four), so the sky clears as you settle your hauntings. The drift calms during a focus session and disappears with reduced motion. open the task house, Candle Room or Folklore Cabinet; see your selected lantern, current session, completed-task count and seven local days of focus. |
 | **Hauntings** | Add and edit tasks with notes and priorities; search/filter, complete/reopen, delete and clear settled tasks. A first completion releases the task's ghost with a floating +10 and earns 10 virtual candy. |
 | **Candle Room** | Link a task to a 15/25/45-minute focus session; pause, resume or reset; take a five-minute rest. A shrinking candle visualizes the remaining time; when it burns out, smoke curls from the wick. Synthesized night wind is opt-in with volume control. |
 | **Folklore Cabinet** | Spend virtual candy on lanterns, equip your favourite, and discover six original, source-cited culture cards. Sources remain readable even when a card is locked. Export a private JSON backup or preview and confirm a validated restore. |

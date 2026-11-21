@@ -152,7 +152,7 @@
   });
 
   all('[data-icon]').forEach(node => { node.innerHTML = A.icon(node.dataset.icon); });
-  all('[data-art]').forEach(node => { node.innerHTML = node.dataset.art === 'ghost' ? A.ghost() : A.lantern(); });
+  all('[data-art]').forEach(node => { node.innerHTML = node.dataset.art === 'ghost' ? A.ghost() : node.dataset.art === 'bat' ? A.bat() : A.lantern(); });
   $('town-art').innerHTML = A.town();
 
   function showView(view, focus = true) {
@@ -344,7 +344,18 @@
     $('town-lantern').innerHTML = A.lantern(state.lantern);
     $('town-lantern').dataset.lantern = state.lantern;
     all('[data-art="lantern"]').filter(el => el.closest('.side-companion')).forEach(el => { el.innerHTML = A.lantern(state.lantern); });
+    renderDrift();
     all('[data-balance]').forEach(el => { el.textContent = state.balance; });
+  }
+  // Page-wide drifting spirits mirror the task board: one ghost per unsettled task (up to four),
+  // two friendly visitors on an empty board, none once every haunting is settled. Decorative only.
+  function renderDrift() {
+    const open = state.tasks.filter(t => !t.done).length;
+    const visible = state.tasks.length ? Math.min(open, 4) : 2;
+    all('.drift-ghost').forEach((node, index) => node.classList.toggle('is-settled', index >= visible));
+    all('.drift-lantern .drift-body').forEach(node => {
+      if (node.dataset.lantern !== state.lantern) { node.innerHTML = A.lantern(state.lantern); node.dataset.lantern = state.lantern; }
+    });
   }
   function renderChart(days) {
     const maximum = Math.max(25, ...days.map(day => day.minutes));
