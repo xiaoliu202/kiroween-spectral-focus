@@ -160,7 +160,17 @@ async function axe(p, name) {
   });
   await check('Buy/equip turnip, reject unaffordable skins, open earned stories and retain on refresh', async () => {
     await nav('cabinet'); assert(await page.locator('[data-skin="violet"]').isDisabled());
+    const jack = page.locator('[data-skin-card="harvest"]');
+    assert.equal(await jack.locator('.lantern-body').evaluate(el => getComputedStyle(el).animationName),'lantern-hop');
+    assert.equal(await jack.locator('.lantern-maw').evaluate(el => getComputedStyle(el).animationName),'lantern-maw');
+    assert.equal(await jack.locator('.lantern-candy').evaluate(el => getComputedStyle(el).animationName),'lantern-candy');
+    assert.notEqual(await page.locator('[data-skin-card="turnip"] .lantern-body').evaluate(el => getComputedStyle(el).animationDelay),'0s', 'Lanterns hop out of step');
+    assert.equal(await page.locator('.lore-illustration .lantern-body').first().evaluate(el => getComputedStyle(el).animationName),'none', 'Only collection lanterns hop');
+    assert.equal(await page.locator('.side-companion .lantern-maw').evaluate(el => getComputedStyle(el).opacity),'0', 'Other lanterns keep a closed mouth');
     await page.locator('[data-skin="turnip"]').click(); assert.equal((await state()).balance,0); assert.equal((await state()).lantern,'turnip');
+    assert(await page.locator('[data-skin-card="turnip"]').evaluate(el => el.classList.contains('is-feasting')), 'Buying plays the feast');
+    assert.equal(await page.locator('[data-skin-card="turnip"] .lantern-maw').evaluate(el => getComputedStyle(el).animationIterationCount),'1');
+    await page.clock.runFor(1800); assert.equal(await page.locator('[data-skin-card="turnip"]').evaluate(el => el.classList.contains('is-feasting')),false);
     assert(await page.locator('[data-skin="turnip"]').isDisabled());
     await page.locator('[data-lore-card="samhain"] [data-read]').click();
     assert((await page.locator('#lore-dialog-body').textContent()).includes('disputed'));
@@ -254,6 +264,9 @@ async function axe(p, name) {
     assert.equal(await page.locator('.town-spirit').evaluate(el => getComputedStyle(el).animationName),'none');
     assert.equal(await page.locator('.smoke span').first().evaluate(el => getComputedStyle(el).animationName),'none');
     assert.equal(await page.locator('.night-drift').evaluate(el => getComputedStyle(el).display),'none', 'System setting removes the drift layer');
+    assert.equal(await page.locator('.skin-card .lantern-body').first().evaluate(el => getComputedStyle(el).animationName),'none', 'Collection lanterns stay still');
+    assert.equal(await page.locator('.skin-card .lantern-maw').first().evaluate(el => getComputedStyle(el).opacity),'0', 'Still lanterns keep their mouths closed');
+    assert.equal(await page.locator('.skin-card .lantern-candy').first().evaluate(el => getComputedStyle(el).opacity),'0');
     assert.equal(await page.locator('.town-wanderer').evaluate(el => getComputedStyle(el).animationName),'none');
     const calm = await makePage(); await calm.emulateMedia({reducedMotion:'reduce'});
     await addTask('A quiet completion','', 'normal', calm); await calm.locator('.task-check').first().check();

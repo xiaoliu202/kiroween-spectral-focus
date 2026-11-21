@@ -318,11 +318,14 @@
     }
     if (button.dataset.skin) {
       const id = button.dataset.skin;
-      if (!state.owned.includes(id) && !M.buySkin(state, id)) return toast('That lantern needs a few more treats.');
+      const bought = !state.owned.includes(id);
+      if (bought && !M.buySkin(state, id)) return toast('That lantern needs a few more treats.');
       M.selectSkin(state, id); persist(); renderAll();
       const target = all('[data-skin]').find(b => b.dataset.skin === id);
-      target?.closest('article')?.querySelector('h3')?.focus();
-      toast('Your doorstep has a new glow. Visit the Town to see it.');
+      const card = target?.closest('article');
+      card?.querySelector('h3')?.focus();
+      if (card) feast(card);
+      toast(bought ? 'Crunch! Your new lantern gobbled the candy. Visit the Town to see it glow.' : 'Your doorstep has a new glow. Visit the Town to see it.');
     }
     if (button.dataset.read) openLore(button.dataset.read);
   });
@@ -363,6 +366,12 @@
     all('.drift-lantern .drift-body').forEach(node => {
       if (node.dataset.lantern !== state.lantern) { node.innerHTML = A.lantern(state.lantern); node.dataset.lantern = state.lantern; }
     });
+  }
+  // Decorative one-shot: the chosen lantern hops and gulps a candy. The idle loop pauses meanwhile.
+  function feast(card) {
+    card.classList.remove('is-feasting'); void card.offsetWidth;
+    card.classList.add('is-feasting');
+    setTimeout(() => card.classList.remove('is-feasting'), 1700);
   }
   function renderChart(days) {
     const maximum = Math.max(25, ...days.map(day => day.minutes));

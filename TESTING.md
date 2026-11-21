@@ -1,5 +1,9 @@
 # Verification · Halloween Town v2
 
+## Hungry lanterns (November 21, 2026)
+
+The lantern SVG now has separate eyes and mouth, plus a hidden open maw and candy. Only the Folklore Cabinet collection animates them: a 6-second idle loop of two hops, then a wide-open gulp of a falling candy, offset per card; buying or equipping plays a 1.6-second one-shot feast. Browser checks confirm the animations run only on collection cards, start out of step, play the feast on purchase and clean it up, keep other lanterns' mouths closed, and freeze with closed mouths under reduced motion. `npm run verify:report` passed: 63 model tests, 15 browser groups.
+
 ## Stale-cache fix (November 21, 2026)
 
 After the drift release, a browser that still had the previous `style.css` cached (GitHub Pages sends `max-age=600`) rendered the new drift ghosts unsized, at full page width. Fixes: the drift layer ships `hidden` and `app.js` reveals it only when its stylesheet rule is active (otherwise it removes it); asset URLs carry `?v=`, which the Pages workflow stamps with the commit id on each deploy. A new browser assertion serves a stylesheet without the drift rules at 1024px and checks that the layer is removed and no ghost is wider than 200px.

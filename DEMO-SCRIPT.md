@@ -9,7 +9,7 @@ Record the deployed GitHub Pages URL in a fresh browser profile, so no personal 
 | 0:35–1:05 | Click Focus on a task, choose 15 min, light the candle. Speed up time with DevTools or cut to a shorter take | "Link a task and light the candle. It burns down as time passes, survives refresh, and only fully finished sessions count." |
 | 1:05–1:20 | Let the candle finish, then show the smoke curl and the completion message | "When the candle goes out, the time goes in your journal. The task stays yours to finish." |
 | 1:20–1:40 | Complete the task and show the ghost lifting away and the +10 treat | "Settle a task and its ghost drifts away. The first completion earns ten candy. Reopening it can't farm more." |
-| 1:40–2:05 | Folklore Cabinet: buy the turnip lantern, open the Samhain card and its source | "Candy buys lanterns, starting with the old-world turnip, and unlocks six folklore cards. Each one cites the Library of Congress or another source." |
+| 1:40–2:05 | Folklore Cabinet: buy the turnip lantern, open the Samhain card and its source | "Candy buys lanterns, and each one gulps its treat, starting with the old-world turnip, and unlocks six folklore cards. Each one cites the Library of Congress or another source." |
 | 2:05–2:40 | Kiro IDE: the spec, a property test, the failing counterexample, the clamp fix, and the hooks panel | "I built the second iteration in Kiro. I wrote the invariants as a spec, and Kiro turned them into property-based tests. Those tests found a real timer bug that 52 example tests had missed. Steering keeps it static and accessible, and hooks run the tests on every save." |
 | 2:40–2:50 | Back to the Town at night | "Spectral Focus: a little focus, a little hocus-pocus." |
 

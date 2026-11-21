@@ -406,6 +406,66 @@ body.is-focusing .night-drift { opacity: .4; }
 @keyframes chimney-puff { 0% { opacity: 0; transform: translate(0,0) scale(.6); } 15% { opacity: .35; } 100% { opacity: 0; transform: translate(14px,-58px) scale(2.6); } }
 @keyframes moon-breathe { from { opacity: .7; transform: scale(.94); } to { opacity: 1; transform: scale(1.06); } }
 @keyframes wander { 0% { transform: translate(-70px, 4px); } 50% { transform: translate(-5px, -10px); } 100% { transform: translate(55px, 2px); } }
+/* ---- Folklore Cabinet: hopping lanterns that gulp a candy (decorative, idle loop). ---- */
+.skin-card .lantern-art { overflow: visible; }
+.skin-card .lantern-body, .skin-card .lantern-shadow, .skin-card .lantern-maw, .skin-card .lantern-eyes, .skin-card .lantern-candy { transform-box: fill-box; }
+.skin-card .lantern-body { transform-origin: 50% 100%; animation: lantern-hop 6s ease-in-out infinite; animation-delay: var(--hop-delay, 0s); }
+.skin-card .lantern-shadow { transform-origin: 50% 50%; animation: lantern-shadow 6s ease-in-out infinite; animation-delay: var(--hop-delay, 0s); }
+.skin-card .lantern-mouth { animation: lantern-mouth 6s step-end infinite; animation-delay: var(--hop-delay, 0s); }
+.skin-card .lantern-maw { transform-origin: 50% 20%; animation: lantern-maw 6s ease-out infinite; animation-delay: var(--hop-delay, 0s); }
+.skin-card .lantern-eyes { transform-origin: 50% 70%; animation: lantern-squint 6s ease-in-out infinite; animation-delay: var(--hop-delay, 0s); }
+.skin-card .lantern-candy { transform-origin: 50% 50%; animation: lantern-candy 6s ease-in infinite; animation-delay: var(--hop-delay, 0s); }
+.skin-card:nth-child(2) { --hop-delay: -1.5s; }
+.skin-card:nth-child(3) { --hop-delay: -3s; }
+.skin-card:nth-child(4) { --hop-delay: -4.5s; }
+.skin-card:hover .lantern-art, .skin-card:focus-within .lantern-art { filter: drop-shadow(0 0 18px #f6a45a55); }
+/* Buying or equipping plays one quick feast on that card. */
+.skin-card.is-feasting .lantern-body { animation: lantern-hop 1.6s ease-in-out 1; animation-delay: -.8s; }
+.skin-card.is-feasting .lantern-shadow { animation: lantern-shadow 1.6s ease-in-out 1; animation-delay: -.8s; }
+.skin-card.is-feasting .lantern-mouth { animation: lantern-mouth 1.6s step-end 1; animation-delay: -.8s; }
+.skin-card.is-feasting .lantern-maw { animation: lantern-maw 1.6s ease-out 1; animation-delay: -.8s; }
+.skin-card.is-feasting .lantern-eyes { animation: lantern-squint 1.6s ease-in-out 1; animation-delay: -.8s; }
+.skin-card.is-feasting .lantern-candy { animation: lantern-candy 1.6s ease-in 1; animation-delay: -.8s; }
+@keyframes lantern-hop {
+  0%, 46%, 100% { transform: translateY(0) scale(1, 1); }
+  5% { transform: translateY(0) scale(1.08, .9); }
+  13% { transform: translateY(-18px) scale(.95, 1.07); }
+  21% { transform: translateY(0) scale(1.08, .92); }
+  27% { transform: translateY(0) scale(1, 1); }
+  32% { transform: translateY(-9px) scale(.98, 1.03); }
+  38% { transform: translateY(0) scale(1.04, .96); }
+  56% { transform: translateY(0) scale(1, 1); }
+  62% { transform: translateY(-4px) scale(1.06, 1.06); }
+  70% { transform: translateY(0) scale(1.1, .88); }
+  75% { transform: translateY(0) scale(.96, 1.04); }
+  80% { transform: translateY(0) scale(1.02, .98); }
+  86% { transform: translateY(0) scale(1, 1); }
+}
+@keyframes lantern-shadow {
+  0%, 46%, 100% { transform: scaleX(1); opacity: .5; }
+  13% { transform: scaleX(.7); opacity: .25; }
+  21% { transform: scaleX(1.05); opacity: .5; }
+  32% { transform: scaleX(.85); opacity: .35; }
+  38% { transform: scaleX(1); opacity: .5; }
+}
+@keyframes lantern-mouth { 0% { opacity: 1; } 58% { opacity: 0; } 71% { opacity: 1; } }
+@keyframes lantern-maw {
+  0%, 57% { opacity: 0; transform: scaleY(.2); }
+  60% { opacity: 1; transform: scaleY(1.08); }
+  66% { opacity: 1; transform: scaleY(1); }
+  70% { opacity: 1; transform: scaleY(.25); }
+  71%, 100% { opacity: 0; transform: scaleY(.2); }
+}
+@keyframes lantern-squint {
+  0%, 57%, 84%, 100% { transform: scaleY(1); }
+  62%, 72% { transform: scaleY(.35); }
+}
+@keyframes lantern-candy {
+  0%, 48% { opacity: 0; transform: translate(0, -28px) rotate(-20deg); }
+  52% { opacity: 1; transform: translate(0, -24px) rotate(0deg); }
+  64% { opacity: 1; transform: translate(0, 62px) rotate(220deg) scale(.9); }
+  67%, 100% { opacity: 0; transform: translate(0, 70px) rotate(260deg) scale(.4); }
+}
 /* Without motion the night is still: no drifting layer at all. */
 body.reduce-motion .night-drift { display: none; }
 @media (prefers-reduced-motion: reduce) { .night-drift { display: none; } }
