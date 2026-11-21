@@ -1,5 +1,9 @@
 # Verification · Halloween Town v2
 
+## Stale-cache fix (November 21, 2026)
+
+After the drift release, a browser that still had the previous `style.css` cached (GitHub Pages sends `max-age=600`) rendered the new drift ghosts unsized, at full page width. Fixes: the drift layer ships `hidden` and `app.js` reveals it only when its stylesheet rule is active (otherwise it removes it); asset URLs carry `?v=`, which the Pages workflow stamps with the commit id on each deploy. A new browser assertion serves a stylesheet without the drift rules at 1024px and checks that the layer is removed and no ghost is wider than 200px.
+
 ## Night drift and living town (November 21, 2026)
 
 Added a page-wide, `aria-hidden`, pointer-transparent drift layer behind the content, with ghosts, the equipped lantern and bats, plus scene motion: flapping bats, chimney smoke, flickering pumpkin faces, a breathing moon glow and a wandering ghost. Browser checks now confirm that the layer is decorative, never sits on top of a control at its centre, runs its animations, shows two ghosts on an empty board and one per unsettled task (max four) afterwards, and is removed under both the app and system reduced-motion settings, which also freeze the town. `npm run verify:report` passed: 63 model tests, 15 browser groups, no console errors.

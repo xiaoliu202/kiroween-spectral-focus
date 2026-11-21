@@ -80,6 +80,19 @@ async function axe(p, name) {
     assert.equal(await driftGhosts(),2, 'An empty board has two friendly visitors');
     const behind = await page.evaluate(() => { const r = document.querySelector('.town-heading .button.primary').getBoundingClientRect(); return document.elementFromPoint(r.left + r.width/2, r.top + r.height/2).closest('.night-drift') === null; });
     assert(behind, 'Drift layer never sits on top of controls');
+    assert.equal(await drift.evaluate(el => el.hidden),false, 'Drift layer is revealed when its styles are active');
+    // Regression: a stale cached style.css without the drift rules must not render full-width ghosts.
+    const css = fs.readFileSync(path.resolve(__dirname,'..','style.css'),'utf8');
+    const staleCss = css.slice(0, css.indexOf('/* ---- Night drift'));
+    assert(staleCss.length > 1000 && !staleCss.includes('.night-drift'));
+    const staleContext = await browser.newContext({viewport:{width:1024,height:600}}); contexts.push(staleContext);
+    await staleContext.route(/\/style\.css(\?.*)?$/, route => route.fulfill({status:200,contentType:'text/css',body:staleCss}));
+    const stale = await staleContext.newPage(); stale.on('pageerror', error => report.errors.push(error.message));
+    await stale.goto(base); await stale.locator('#town-title').waitFor();
+    assert.equal(await stale.locator('.night-drift').count(),0, 'Unstyled drift layer is removed');
+    const widest = await stale.evaluate(() => Math.max(0, ...[...document.querySelectorAll('.ghost-art')].filter(el => el.getClientRects().length).map(el => el.getBoundingClientRect().width)));
+    assert(widest < 200, `No oversized ghost with stale CSS (widest ${widest}px)`);
+    await staleContext.close();
   });
   await check('Task editor, whitespace validation, editing, notes, priority and safe literal text', async () => {
     await nav('tasks'); await page.locator('#new-task').click();

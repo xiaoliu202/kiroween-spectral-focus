@@ -154,6 +154,13 @@
   all('[data-icon]').forEach(node => { node.innerHTML = A.icon(node.dataset.icon); });
   all('[data-art]').forEach(node => { node.innerHTML = node.dataset.art === 'ghost' ? A.ghost() : node.dataset.art === 'bat' ? A.bat() : A.lantern(); });
   $('town-art').innerHTML = A.town();
+  // Only reveal the drift layer once its own stylesheet rules are active. A stale cached
+  // style.css would otherwise render the unsized ghost SVGs at full page width.
+  const driftLayer = document.querySelector('.night-drift');
+  if (driftLayer) {
+    driftLayer.hidden = false;
+    if (getComputedStyle(driftLayer).position !== 'fixed') driftLayer.remove();
+  }
 
   function showView(view, focus = true) {
     if (!Object.hasOwn(views, view)) view = 'town';
