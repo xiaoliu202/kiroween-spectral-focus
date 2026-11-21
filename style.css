@@ -521,6 +521,46 @@ body.is-focusing .night-drift { opacity: .4; }
 @keyframes lore-bob { 0%, 100% { transform: translateY(-4px) rotate(-3deg); } 40% { transform: translateY(9px) rotate(3deg); } 55% { transform: translateY(6px) rotate(1deg); } }
 @keyframes lore-ripple { 0%, 30% { opacity: 0; transform: scale(.5); } 42% { opacity: .9; } 100% { opacity: 0; transform: scale(1.5); } }
 @keyframes lore-sheen { 0%, 70% { background-position: 160% 0; } 100% { background-position: -60% 0; } }
+/* ---- Sidebar: a little life around the navigation (decorative). ---- */
+.brand-mark { display: inline-block; }
+.brand-mark .ghost-art { animation: brand-float 3.8s ease-in-out infinite alternate; filter: drop-shadow(0 0 8px #f4a26433); }
+.brand-mark .ghost-art > ellipse:nth-of-type(-n+2) { transform-box: fill-box; transform-origin: center; animation: lore-blink 5s ease-in-out infinite; }
+.brand-star { display: inline-block; animation: brand-twinkle 2.6s ease-in-out infinite alternate; }
+.brand:hover .brand-star, .brand:focus-visible .brand-star { animation: brand-spin .7s ease-out; }
+.main-nav .icon { transform-origin: 50% 80%; }
+.main-nav a[aria-current] .icon { animation: nav-glow 2.4s ease-in-out infinite alternate; }
+.main-nav a[data-nav="town"]:is(:hover, :focus-visible) .icon { animation: nav-hop .55s ease-out; }
+.main-nav a[data-nav="tasks"]:is(:hover, :focus-visible) .icon { animation: nav-wiggle .7s ease-in-out; }
+.main-nav a[data-nav="focus"]:is(:hover, :focus-visible) .icon { animation: nav-flicker .8s ease-in-out; }
+.main-nav a[data-nav="cabinet"]:is(:hover, :focus-visible) .icon { animation: nav-flip .6s ease-in-out; }
+[aria-current] .nav-dot { display: inline-block; width: 6px; height: 6px; line-height: 6px; text-align: center; border-radius: 50%; animation: dot-pulse 2.4s ease-out infinite; }
+.nav-count { display: inline-block; }
+.nav-count.bump { animation: count-pop .55s ease-out; }
+.side-companion { position: relative; }
+.side-companion .lantern-art { animation: side-glow 3.4s ease-in-out infinite alternate; }
+.side-companion .lantern-body, .side-companion .lantern-shadow { transform-box: fill-box; }
+.side-companion .lantern-body { transform-origin: 50% 100%; animation: side-float 3.4s ease-in-out infinite alternate; }
+.side-companion .lantern-shadow { transform-origin: 50% 50%; animation: side-shadow 3.4s ease-in-out infinite alternate; }
+.side-companion .lantern-face { animation: pumpkin-flicker 1.8s ease-in-out infinite alternate; }
+.side-spark { position: absolute; color: #ffd38a; font-size: 9px; opacity: 0; pointer-events: none; animation: side-spark 4.5s ease-in-out infinite; }
+.side-spark.k1 { left: 22%; top: 34px; }
+.side-spark.k2 { right: 22%; top: 20px; font-size: 12px; animation-delay: -1.5s; }
+.side-spark.k3 { right: 30%; top: 70px; font-size: 7px; animation-delay: -3s; }
+.local-note .status-dot { animation: dot-pulse 2.8s ease-out infinite; }
+@keyframes brand-float { from { transform: translateY(3px) rotate(-13deg); } to { transform: translateY(-5px) rotate(-5deg); } }
+@keyframes brand-twinkle { from { transform: scale(.85) rotate(-10deg); opacity: .6; text-shadow: none; } to { transform: scale(1.15) rotate(12deg); opacity: 1; text-shadow: 0 0 10px #ebc58b99; } }
+@keyframes brand-spin { from { transform: rotate(0) scale(1); } to { transform: rotate(360deg) scale(1.2); } }
+@keyframes nav-glow { from { filter: drop-shadow(0 0 0 #f4a26400); } to { filter: drop-shadow(0 0 5px #f4a264aa); } }
+@keyframes nav-hop { 0%, 100% { transform: translateY(0) scale(1, 1); } 25% { transform: translateY(0) scale(1.15, .85); } 55% { transform: translateY(-5px) scale(.92, 1.1); } 80% { transform: translateY(0) scale(1.06, .94); } }
+@keyframes nav-wiggle { 0%, 100% { transform: rotate(0) translateY(0); } 20% { transform: rotate(-14deg) translateY(-2px); } 45% { transform: rotate(12deg) translateY(-4px); } 70% { transform: rotate(-6deg) translateY(-1px); } }
+@keyframes nav-flicker { 0%, 100% { transform: scale(1); filter: none; } 30% { transform: scale(1.12); filter: drop-shadow(0 0 6px #ffc46d); } 55% { transform: scale(.97); filter: drop-shadow(0 0 2px #ffc46d); } 75% { transform: scale(1.08); filter: drop-shadow(0 0 7px #ffc46d); } }
+@keyframes nav-flip { 0%, 100% { transform: scaleX(1); } 40% { transform: scaleX(-.2) translateY(-2px); } 70% { transform: scaleX(1.08); } }
+@keyframes dot-pulse { 0% { box-shadow: 0 0 0 0 #afc6a088; } 70%, 100% { box-shadow: 0 0 0 6px #afc6a000; } }
+@keyframes count-pop { 0% { transform: scale(1); } 35% { transform: scale(1.45); background: #f4a264; color: #2e1b1c; } 100% { transform: scale(1); } }
+@keyframes side-float { from { transform: translateY(0) rotate(-3deg); } to { transform: translateY(-7px) rotate(3deg); } }
+@keyframes side-shadow { from { transform: scaleX(1); opacity: .5; } to { transform: scaleX(.82); opacity: .3; } }
+@keyframes side-glow { from { filter: drop-shadow(0 0 12px #e6a15b18); } to { filter: drop-shadow(0 0 26px #f2a15a55); } }
+@keyframes side-spark { 0%, 100% { opacity: 0; transform: translateY(6px) scale(.6); } 40% { opacity: .9; transform: translateY(-6px) scale(1); } 70% { opacity: 0; transform: translateY(-14px) scale(.7); } }
 /* Without motion the night is still: no drifting layer at all. */
 body.reduce-motion .night-drift { display: none; }
 @media (prefers-reduced-motion: reduce) { .night-drift { display: none; } }

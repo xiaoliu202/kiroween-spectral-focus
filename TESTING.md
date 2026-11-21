@@ -1,5 +1,9 @@
 # Verification · Halloween Town v2
 
+## Living sidebar (November 21, 2026)
+
+Added a floating, blinking brand ghost, a twinkling star, a glowing current-page icon and pulsing dot, per-item hover/focus icon moves, a badge pop when the open-task count changes, a bobbing companion lantern with flickering face and fireflies, and a pulsing privacy dot. Browser checks cover each animation, that hover moves trigger, that only the current page shows its dot, that the badge pops after a task is added, that the fireflies are `aria-hidden`, that the sidebar lantern keeps its mouth closed, and that everything is still under reduced motion. A first run failed because the pointer was still hovering The Town after navigation, so the test now moves the pointer away first. `npm run verify:report` passed: 63 model tests, 15 browser groups.
+
 ## Living field notes (November 21, 2026)
 
 Each folklore card illustration now animates to match its theme (lantern swing and flicker, moon rock with stars and mist, candle glow, candy toss with sparkles, ghost drift and blink with wisps, pumpkin bob with ripples). Decorative `aria-hidden` props are added only to the illustration. Discovered cards add a periodic sheen, and cards lift slightly on hover or focus. The story dialog reuses the same art animation. Browser checks confirm each animation, that the props are decorative, that the sheen appears only on discovered cards, and that under reduced motion the art is still and the ripples and sparkles are hidden. `npm run verify:report` passed: 63 model tests, 15 browser groups.

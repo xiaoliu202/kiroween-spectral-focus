@@ -23,7 +23,8 @@ Open **http://127.0.0.1:8000**. Node.js 20+ is required for the bundled developm
 | **Candle Room** | Link a task to a 15/25/45-minute focus session; pause, resume or reset; take a five-minute rest. A shrinking candle visualizes the remaining time; when it burns out, smoke curls from the wick. Synthesized night wind is opt-in with volume control. |
 | **Folklore Cabinet** | The lanterns in the collection hop about and, every few seconds, open wide to gulp a falling candy; buying one plays the feast straight away. Spend virtual candy on lanterns, equip your favourite, and discover six original, source-cited culture cards, each with its own small animation: a swinging turnip lantern, a rocking moon under twinkling stars, a flickering candle, tossed candy, a drifting ghost that blinks, and a pumpkin bobbing in rippling water. Discovered cards catch the light now and then. Sources remain readable even when a card is locked. Export a private JSON backup or preview and confirm a validated restore. |
 
-### Small rewards, honest rules
+#The sidebar is alive too: the brand ghost floats and blinks, its star twinkles, each navigation icon has its own hover move (hop, wiggle, flicker, page-flip), the Hauntings badge pops when its count changes, and the companion lantern bobs and glows among fireflies.
+## Small rewards, honest rules
 
 - Every unique task earns **10 candy only on its first completion**. Reopening, completing again or deleting it does not reset that ledger.
 - Lanterns: **Harvest Jack** (included), **Old-world Turnip** (10), **Moonlit Pumpkin** (20), **Ember Keeper** (30). Buying and equipping are atomic; an owned lantern is free to reuse.

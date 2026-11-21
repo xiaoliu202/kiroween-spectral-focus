@@ -154,6 +154,7 @@
   all('[data-icon]').forEach(node => { node.innerHTML = A.icon(node.dataset.icon); });
   all('[data-art]').forEach(node => { node.innerHTML = node.dataset.art === 'ghost' ? A.ghost() : node.dataset.art === 'bat' ? A.bat() : A.lantern(); });
   $('town-art').innerHTML = A.town();
+  $('nav-task-count').addEventListener('animationend', event => event.currentTarget.classList.remove('bump'));
   // Only reveal the drift layer once its own stylesheet rules are active. A stale cached
   // style.css would otherwise render the unsized ghost SVGs at full page width.
   const driftLayer = document.querySelector('.night-drift');
@@ -335,7 +336,11 @@
     const unlocked = L.cards.filter(card => M.isLoreUnlocked(state, card.id)).length;
     text('stat-today', stats.todaySessions); text('stat-minutes', stats.totalMinutes);
     text('stat-tasks', progress.tasks); text('stat-lore', unlocked);
-    text('nav-task-count', state.tasks.filter(t => !t.done).length);
+    const navCount = $('nav-task-count'), openCount = String(state.tasks.filter(t => !t.done).length);
+    if (navCount.textContent !== openCount) {
+      navCount.textContent = openCount;
+      navCount.classList.remove('bump'); void navCount.offsetWidth; navCount.classList.add('bump');
+    }
     text('town-progress', `${progress.tasks} haunting${progress.tasks === 1 ? '' : 's'} settled`);
     document.body.classList.toggle('has-settled', progress.tasks > 0);
     const town = $('town-tasks'); town.replaceChildren();

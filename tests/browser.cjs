@@ -80,6 +80,17 @@ async function axe(p, name) {
     assert.equal(await driftGhosts(),2, 'An empty board has two friendly visitors');
     const behind = await page.evaluate(() => { const r = document.querySelector('.town-heading .button.primary').getBoundingClientRect(); return document.elementFromPoint(r.left + r.width/2, r.top + r.height/2).closest('.night-drift') === null; });
     assert(behind, 'Drift layer never sits on top of controls');
+    await page.mouse.move(900,20); // The last navigation click leaves the pointer hovering a nav item.
+    const anim = async selector => page.locator(selector).first().evaluate(el => getComputedStyle(el).animationName);
+    assert.equal(await anim('.brand-mark .ghost-art'),'brand-float'); assert.equal(await anim('.brand-star'),'brand-twinkle');
+    assert.equal(await anim('.side-companion .lantern-body'),'side-float'); assert.equal(await anim('.side-spark'),'side-spark');
+    assert.equal(await anim('.local-note .status-dot'),'dot-pulse'); assert.equal(await anim('.main-nav a[aria-current] .icon'),'nav-glow');
+    assert.equal(await page.locator('.side-spark').evaluateAll(els => els.every(el => el.getAttribute('aria-hidden') === 'true')),true);
+    assert.equal(await page.locator('.side-companion .lantern-maw').evaluate(el => getComputedStyle(el).opacity),'0', 'Sidebar lantern keeps its mouth closed');
+    await page.locator('[data-nav="tasks"]').hover(); assert.equal(await anim('[data-nav="tasks"] .icon'),'nav-wiggle');
+    await page.locator('[data-nav="focus"]').hover(); assert.equal(await anim('[data-nav="focus"] .icon'),'nav-flicker');
+    assert.deepEqual(await page.locator('.main-nav a:not([aria-current]) .nav-dot').evaluateAll(els => els.map(el => getComputedStyle(el).display).filter(d => d !== 'none')),[], 'Only the current page shows its dot');
+    await page.mouse.move(900,20);
     assert.equal(await drift.evaluate(el => el.hidden),false, 'Drift layer is revealed when its styles are active');
     // Regression: a stale cached style.css without the drift rules must not render full-width ghosts.
     const css = fs.readFileSync(path.resolve(__dirname,'..','style.css'),'utf8');
@@ -101,6 +112,7 @@ async function axe(p, name) {
     await page.locator('#task-title').fill('Write the Halloween chapter');
     await page.locator('#task-note').fill('Begin with the lantern story.');
     await page.locator('#task-priority').selectOption('high'); await page.locator('#save-task').click();
+    assert.equal(await page.locator('#nav-task-count').textContent(),'1'); assert(await page.locator('#nav-task-count').evaluate(el => el.classList.contains('bump')), 'Badge pops when the count changes');
     await page.locator('[data-action="edit"]').click();
     await page.locator('#task-title').fill('Finish the Halloween chapter');
     await page.locator('#task-note').fill('Start small. Check the cultural sources.'); await page.locator('#save-task').click();
@@ -275,6 +287,8 @@ async function axe(p, name) {
     assert.equal(await page.locator('.skin-card .lantern-maw').first().evaluate(el => getComputedStyle(el).opacity),'0', 'Still lanterns keep their mouths closed');
     assert.equal(await page.locator('.skin-card .lantern-candy').first().evaluate(el => getComputedStyle(el).opacity),'0');
     assert.equal(await page.locator('.lore-art-ghost > .ghost-art').evaluate(el => getComputedStyle(el).animationName),'none', 'Field notes stay still');
+    assert.equal(await page.locator('.brand-mark .ghost-art').evaluate(el => getComputedStyle(el).animationName),'none', 'Sidebar stays still');
+    assert.equal(await page.locator('.side-spark').first().evaluate(el => getComputedStyle(el).opacity),'0', 'Fireflies are hidden without motion');
     assert.equal(await page.locator('.lore-ripple').first().evaluate(el => getComputedStyle(el).opacity),'0', 'Ripples are hidden without motion');
     assert.equal(await page.locator('.lore-sparkle').first().evaluate(el => getComputedStyle(el).opacity),'0');
     assert.equal(await page.locator('.town-wanderer').evaluate(el => getComputedStyle(el).animationName),'none');
