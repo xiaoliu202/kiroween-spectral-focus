@@ -9,3 +9,5 @@ evidence/failure.png
 # Local planning notes (Chinese, not part of the submission).
 .pi/
 IMPROVEMENT-PLAN.md
+# Upload-only images for the Devpost gallery (generated, not part of the app).
+submission-assets/
