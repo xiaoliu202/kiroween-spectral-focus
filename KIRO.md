@@ -11,6 +11,7 @@ This file records what was actually done in Kiro, and what was not. Keep it accu
 | 2 · Local backup/restore (Nov 21, 2026) | An external coding agent, **not Kiro** | Versioned JSON backup and validated restore, plus two test-timing fixes. Not described as Kiro work anywhere. |
 | 3 · Night drift (Nov 21, 2026) | **Kiro IDE**, agent chat | Page-wide drifting ghosts/lanterns/bats tied to unsettled tasks, a living town scene (bats, chimney smoke, pumpkin flicker, wandering ghost), reduced-motion removal and browser assertions for all of it. The steering rule to keep decoration away from controls led Kiro to place the layer behind the content instead of over it. |
 | 4 · Hungry lanterns (Nov 21, 2026) | **Kiro IDE**, agent chat | Collection lanterns hop and gulp candy; purchase feast; reduced-motion and scope assertions. |
+| 5 · Living field notes (Nov 21, 2026) | **Kiro IDE**, agent chat | Themed animation for each folklore card, sheen on discovered cards, hover lift, reduced-motion and decorative-markup assertions. |
 
 ## Spec-driven development
 

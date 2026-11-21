@@ -395,6 +395,19 @@
     if (card.art === 'ghost') return A.ghost();
     return A.icon(card.art);
   }
+  // Small decorative props that animate around each field-note illustration (static markup only).
+  function loreExtras(kind, unlocked) {
+    const bit = (cls, content = '') => `<span class="${cls}" aria-hidden="true">${content}</span>`;
+    const props = {
+      moon: bit('lore-mist') + bit('lore-star s1', '✦') + bit('lore-star s2', '✧') + bit('lore-star s3', '✦'),
+      candle: bit('lore-flame-glow'),
+      candy: bit('lore-sparkle s1', '✦') + bit('lore-sparkle s2', '✧') + bit('lore-sparkle s3', '✦'),
+      ghost: bit('lore-wisp w1') + bit('lore-wisp w2') + bit('lore-wisp w3'),
+      harvest: bit('lore-ripple r1') + bit('lore-ripple r2'),
+      turnip: bit('lore-halo')
+    }[kind] || '';
+    return props + (unlocked ? bit('lore-sheen') : '');
+  }
   function sourceLink(source) {
     const a = element('a', '', source.title + ' ↗');
     a.href = source.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; return a;
@@ -421,7 +434,7 @@
     L.cards.forEach((card, index) => {
       const unlocked = M.isLoreUnlocked(state, card.id), rule = M.LORE_RULES.find(rule => rule.id === card.id);
       const container = element('article', `lore-card${unlocked ? ' unlocked' : ''}`); container.dataset.loreCard = card.id;
-      const art = element('div', 'lore-illustration'); art.innerHTML = loreArt(card);
+      const art = element('div', `lore-illustration lore-art-${card.art}`); art.innerHTML = loreArt(card) + loreExtras(card.art, unlocked);
       art.append(element('span','lore-number',`FIELD NOTE ${String(index+1).padStart(2,'0')}`));
       const status = element('span','lore-status', unlocked ? 'DISCOVERED' : 'STILL A MYSTERY'); status.prepend(document.createRange().createContextualFragment(A.icon(unlocked ? 'check' : 'lock'))); art.append(status);
       const content = element('div','lore-card-content');
@@ -440,7 +453,7 @@
     if (!card || !M.isLoreUnlocked(state, id)) return;
     text('lore-dialog-region',card.region);
     text('lore-dialog-number', `FIELD NOTE ${String(L.cards.indexOf(card)+1).padStart(2,'0')} · ORIGINAL SUMMARY`);
-    text('lore-dialog-title',card.title); $('lore-dialog-art').innerHTML = loreArt(card);
+    text('lore-dialog-title',card.title); $('lore-dialog-art').innerHTML = loreArt(card); $('lore-dialog-art').className = `lore-dialog-art lore-art-${card.art}`;
     $('lore-dialog-body').replaceChildren(...card.body.map(paragraph => element('p','',paragraph)));
     $('lore-dialog-sources').replaceChildren(...card.sources.map(source => {
       const div = element('div'); div.append(element('p','fine-print',source.institution),sourceLink(source)); return div;

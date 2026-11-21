@@ -1,5 +1,9 @@
 # Verification · Halloween Town v2
 
+## Living field notes (November 21, 2026)
+
+Each folklore card illustration now animates to match its theme (lantern swing and flicker, moon rock with stars and mist, candle glow, candy toss with sparkles, ghost drift and blink with wisps, pumpkin bob with ripples). Decorative `aria-hidden` props are added only to the illustration. Discovered cards add a periodic sheen, and cards lift slightly on hover or focus. The story dialog reuses the same art animation. Browser checks confirm each animation, that the props are decorative, that the sheen appears only on discovered cards, and that under reduced motion the art is still and the ripples and sparkles are hidden. `npm run verify:report` passed: 63 model tests, 15 browser groups.
+
 ## Hungry lanterns (November 21, 2026)
 
 The lantern SVG now has separate eyes and mouth, plus a hidden open maw and candy. Only the Folklore Cabinet collection animates them: a 6-second idle loop of two hops, then a wide-open gulp of a falling candy, offset per card; buying or equipping plays a 1.6-second one-shot feast. Browser checks confirm the animations run only on collection cards, start out of step, play the feast on purchase and clean it up, keep other lanterns' mouths closed, and freeze with closed mouths under reduced motion. `npm run verify:report` passed: 63 model tests, 15 browser groups.

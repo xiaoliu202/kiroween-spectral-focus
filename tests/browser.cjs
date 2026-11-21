@@ -167,6 +167,13 @@ async function axe(p, name) {
     assert.notEqual(await page.locator('[data-skin-card="turnip"] .lantern-body').evaluate(el => getComputedStyle(el).animationDelay),'0s', 'Lanterns hop out of step');
     assert.equal(await page.locator('.lore-illustration .lantern-body').first().evaluate(el => getComputedStyle(el).animationName),'none', 'Only collection lanterns hop');
     assert.equal(await page.locator('.side-companion .lantern-maw').evaluate(el => getComputedStyle(el).opacity),'0', 'Other lanterns keep a closed mouth');
+    const loreMotion = {turnip:['.lantern-art','lore-swing'], moon:['.icon','lore-rock'], candle:['.icon','lore-candle'], candy:['.icon','lore-toss'], ghost:['.ghost-art','lore-haunt'], harvest:['.lantern-art','lore-bob']};
+    for (const [kind,[selector,name]] of Object.entries(loreMotion)) {
+      assert.equal(await page.locator(`.lore-art-${kind} > ${selector}`).evaluate(el => getComputedStyle(el).animationName),name, `${kind} field note animates`);
+    }
+    assert.equal(await page.locator('#lore-grid [class^="lore-"][aria-hidden="true"], #lore-grid .lore-illustration > span:not(.lore-number):not(.lore-status)').evaluateAll(els => els.every(el => el.getAttribute('aria-hidden') === 'true')),true, 'Field-note props are decorative');
+    assert.equal(await page.locator('.lore-card.unlocked .lore-sheen').count(), await page.locator('.lore-card.unlocked').count(), 'Discovered notes shimmer');
+    assert.equal(await page.locator('.lore-card:not(.unlocked) .lore-sheen').count(),0, 'Locked notes do not shimmer');
     await page.locator('[data-skin="turnip"]').click(); assert.equal((await state()).balance,0); assert.equal((await state()).lantern,'turnip');
     assert(await page.locator('[data-skin-card="turnip"]').evaluate(el => el.classList.contains('is-feasting')), 'Buying plays the feast');
     assert.equal(await page.locator('[data-skin-card="turnip"] .lantern-maw').evaluate(el => getComputedStyle(el).animationIterationCount),'1');
@@ -267,6 +274,9 @@ async function axe(p, name) {
     assert.equal(await page.locator('.skin-card .lantern-body').first().evaluate(el => getComputedStyle(el).animationName),'none', 'Collection lanterns stay still');
     assert.equal(await page.locator('.skin-card .lantern-maw').first().evaluate(el => getComputedStyle(el).opacity),'0', 'Still lanterns keep their mouths closed');
     assert.equal(await page.locator('.skin-card .lantern-candy').first().evaluate(el => getComputedStyle(el).opacity),'0');
+    assert.equal(await page.locator('.lore-art-ghost > .ghost-art').evaluate(el => getComputedStyle(el).animationName),'none', 'Field notes stay still');
+    assert.equal(await page.locator('.lore-ripple').first().evaluate(el => getComputedStyle(el).opacity),'0', 'Ripples are hidden without motion');
+    assert.equal(await page.locator('.lore-sparkle').first().evaluate(el => getComputedStyle(el).opacity),'0');
     assert.equal(await page.locator('.town-wanderer').evaluate(el => getComputedStyle(el).animationName),'none');
     const calm = await makePage(); await calm.emulateMedia({reducedMotion:'reduce'});
     await addTask('A quiet completion','', 'normal', calm); await calm.locator('.task-check').first().check();
